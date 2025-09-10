@@ -2,11 +2,11 @@ import React from "react";
 import TracklistContainer from "../../containers/TracklistContainer";
 import styles from './SearchResults.module.css';
 
-function SearchResults({data, setData}) {
+function SearchResults({response, setResponse, handleAddTrack, operation}) {
     return(
         <div className={styles.searchResults} >  
-            <p>Search Results</p>
-            <TracklistContainer data={data} setData={setData} />
+            <p className={styles.searchResultsTitle} >Search Results</p>
+            <TracklistContainer data={response} setData={setResponse} handleButtonClick={handleAddTrack} operation={operation}/>
         </div>
     )
 }

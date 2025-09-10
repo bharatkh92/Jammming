@@ -1,12 +1,12 @@
 import React from "react";
 import styles from './Track.module.css';
 
-function Track({key, track, artist, album}) {
+function Track({id, track, artist, album, handleButtonClick, buttonOperator}) {
     return(
+        
         <div className={styles.track}>
-            <p>{track}</p>
-            <p>{artist}</p>
-            <p>{album}</p>
+            <p id={id}>{track} by {artist} : {album}</p>
+            <button onClick={()=> handleButtonClick(id, track, artist, album)}>{buttonOperator}</button>
         </div>
     )
 }

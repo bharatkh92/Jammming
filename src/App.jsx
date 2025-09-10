@@ -5,11 +5,18 @@ import './App.css';
 import PlaylistContainer from './containers/PlaylistContainer';
 import SearchBarContainer from './containers/SearchBarContainer';
 import SearchResultsContainer from './containers/SearchResultsContainer';
-import ResponseData from './MockData';
+import {ResponseData, PlaylistData} from './MockData';
+
+
+
+
+
+
 
 
 function App() {
-  const [Response, setResponse] = useState(ResponseData);
+  const [response, setResponse] = useState(ResponseData);
+  const [playlist, setPlaylist] = useState(PlaylistData);
 
   return (
     <div className='app'>
@@ -17,8 +24,8 @@ function App() {
       <SearchBarContainer />
       </div>
       <div className='playlistSearchResultsContainer'>
-        <PlaylistContainer data={Response} setData={setResponse} />
-        <SearchResultsContainer data={Response} setData={setResponse} />
+        <PlaylistContainer playlist={playlist} setPlaylist={setPlaylist} />
+        <SearchResultsContainer response={response} setResponse={setResponse} playlist={playlist} setPlaylist={setPlaylist} />
       </div>
       
     </div>

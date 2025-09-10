@@ -1,10 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import Playlist from "../components/Playlist/Playlist";
 
-function PlaylistContainer({data, setData}) {
+function PlaylistContainer({playlist, setPlaylist}) {
+    const [playlistName, setPlaylistName] = useState('Playlist');
+    const [inputToggle, setInputToggle] = useState(false);
+
+    function handlePlaylistName(e) {
+        setInputToggle(false)
+    }
+
+    function handleRemoveTrack(id, track, artist, album) {
+        setPlaylist((prev) => prev.filter(trackObject => trackObject.track != track));
+    }
+
+    function handleSaveToSpotify() {
+        let uriArray = [];
+        playlist.map(trackObject => uriArray.push(trackObject.uri));
+        alert(uriArray);
+    }
+
     return(
         <>
-        <Playlist data={data} setData={setData} />
+        <Playlist 
+            inputToggle={inputToggle}
+            setInputToggle={setInputToggle}
+            playlistName={playlistName} 
+            setPlaylistName={setPlaylistName} 
+            handlePlaylistName={handlePlaylistName}
+            playlist={playlist} 
+            setPlaylist={setPlaylist} 
+            handleRemoveTrack={handleRemoveTrack}
+            handleSaveToSpotify={handleSaveToSpotify}    
+        />
         </>
     );
 }

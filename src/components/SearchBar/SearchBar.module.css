@@ -1,8 +1,12 @@
 .searchBar {
     /* width: 100%; */
     display: flex;
-    gap: 5%;
+    gap: 1%;
     justify-content: center;
     background-color: aqua;
     padding: 5% 0;
+}
+
+.searchBarLabel {
+    cursor: pointer;
 }

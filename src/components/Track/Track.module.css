@@ -1,6 +1,10 @@
 .track {
-    max-width: 80%;
-    padding: 0 20%;
+    display: flex;
+    flex-wrap: nowrap;
+    min-width: 70%;
+    align-items: center;
+    justify-content: space-between;
     margin: 2% auto;
+    padding: 0 2%;
     background-color: cadetblue;
 }
