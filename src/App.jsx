@@ -8,6 +8,26 @@ import SearchResultsContainer from './containers/SearchResultsContainer';
 import {ResponseData, PlaylistData} from './MockData';
 
 
+import { redirectToAuthCodeFlow, getAccessToken, getProfile } from './authCodeWithPkce';
+
+
+
+const clientId = "66658c358a2d4036983a5e036dad9f41";
+const params = new URLSearchParams(window.location.search);
+const code = params.get("code");
+
+
+
+if (!code) {
+    redirectToAuthCodeFlow(clientId);
+} else {
+    const accessToken = await getAccessToken(clientId, code);
+    localStorage.setItem("accessToken", accessToken);
+    window.location.replace('https://codecademyjammingbharatkh92.netlify.app/');
+
+    // const profile = await getProfile(accessToken);
+    // populateUI(profile);
+}
 
 
 
