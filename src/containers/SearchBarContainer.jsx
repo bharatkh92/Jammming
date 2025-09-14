@@ -3,8 +3,8 @@ import SearchBar from "../components/SearchBar/SearchBar";
 
 function SearchBarContainer({ setResponse }) {
   const [searchText, setSearchText] = useState("");
-  async function handleSearch() {
-    preventDefault();
+  async function handleSearch(event) {
+    event.preventDefault();
     const spotify_access_token = localStorage.getItem("spotify_access_token");
     console.log(spotify_access_token);
     const searchTextURI = encodeURIComponent(searchText);
