@@ -8,10 +8,14 @@ export default function Callback() {
 
   useEffect(() => {
     const code = searchParams.get("code");
+    const existingAccessToken = localStorage.getItem("spotify_access_token");
     const clientId = "66658c358a2d4036983a5e036dad9f41"; // <-- your Spotify client ID
     const redirectURI = "https://codecademyjammingbharatkh92.netlify.app/callback"; // your redirect URI
 
-    if (!code) return;
+    if (!code || existingAccessToken) {
+      navigate("/");  // Already have token, go home
+      return;
+    }
 
     async function getAccessToken() {
       try {
