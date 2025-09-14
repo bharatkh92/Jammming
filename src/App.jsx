@@ -12,8 +12,10 @@ let spotify_access_token = localStorage.getItem('spotify_access_token');
 
 if(!spotify_access_token) {
     redirectToAuthCodeFlow(clientId, redirectURI);
+    console.log(spotify_access_token)
 } else {
   console.log("token is successfully stored")
+  console.log(spotify_access_token)
 }
 
 
