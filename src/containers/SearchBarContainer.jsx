@@ -5,6 +5,7 @@ function SearchBarContainer({setResponse}) {
     const [searchText, setSearchText] = useState('');
     async function handleSearch() {
         const spotify_access_token = localStorage.getItem("spotify_access_token");
+        console.log(spotify_access_token)
         const searchTextURI = encodeURIComponent(searchText);
         const url = `https://api.spotify.com/v1/search?q=${searchTextURI}&type=track`;
         const payload = {
@@ -16,9 +17,9 @@ function SearchBarContainer({setResponse}) {
         try {
             const response = await fetch(url, payload);
             if(!response.ok){
-                console("error response not ok");
+                console.log("error response not ok");
             }
-            const results = response.json();
+            const results = await response.json();
             const tracksObject = results.tracks.items.map(trackObject => ({
                 trackName: trackObject.name,
                 artists: trackObject.artists,
