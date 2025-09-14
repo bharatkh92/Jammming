@@ -12,12 +12,12 @@ export default function Callback() {
     const clientId = "66658c358a2d4036983a5e036dad9f41"; // <-- your Spotify client ID
     const redirectURI =
       "https://codecademyjammingbharatkh92.netlify.app/callback"; // your redirect URI
-    console.log(code);
-    console.log(existingAccessToken);
+    console.log(`code in callback ${code}`);
+    console.log(`existing access token ${existingAccessToken}`);
     if (!code || existingAccessToken) {
       console.log(code);
       console.log(existingAccessToken);
-      navigate("/"); // Already have token, go home
+      // navigate("/"); // Already have token, go home
       return;
     }
 
@@ -48,7 +48,7 @@ export default function Callback() {
         // const { access_token } = data; // Spotify returns 'access_token', not 'spotify_access_token'
         console.log("daata");
         console.log(data);
-        localStorage.setItem("spotify_access_token", access_token);
+        // localStorage.setItem("spotify_access_token", access_token);
         navigate("/"); // redirect back to App
       } catch (err) {
         console.error("Error fetching Spotify token:", err);
