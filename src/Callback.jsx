@@ -13,6 +13,8 @@ export default function Callback() {
     const redirectURI = "https://codecademyjammingbharatkh92.netlify.app/callback"; // your redirect URI
 
     if (!code || existingAccessToken) {
+      console.log(code);
+      console.log(existingAccessToken);
       navigate("/");  // Already have token, go home
       return;
     }
@@ -37,7 +39,8 @@ export default function Callback() {
 
         const data = await response.json();
         const { access_token } = data; // Spotify returns 'access_token', not 'spotify_access_token'
-
+        console.log('daata'); 
+        console.log(data);
         localStorage.setItem("spotify_access_token", access_token);
         navigate("/"); // redirect back to App
       } catch (err) {
