@@ -13,18 +13,18 @@ let spotify_access_token = localStorage.getItem('spotify_access_token');
 if(!spotify_access_token) {
     redirectToAuthCodeFlow(clientId, redirectURI);
 } else {
-  alert("token is granted");
+  console.log("token is successfully stored")
 }
 
 
 function App() {
-  const [response, setResponse] = useState(ResponseData);
+  const [response, setResponse] = useState();
   const [playlist, setPlaylist] = useState(PlaylistData);
 
   return (
     <div className='app'>
       <div className='searchBarContainer'>
-      <SearchBarContainer />
+      <SearchBarContainer setResponse={setResponse} />
       </div>
       <div className='playlistSearchResultsContainer'>
         <PlaylistContainer playlist={playlist} setPlaylist={setPlaylist} />

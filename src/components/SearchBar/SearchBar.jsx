@@ -9,14 +9,14 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 
 library.add(fas)
 
-function SearchBar() {
+function SearchBar({searchText, setSearchText, handleSearch}) {
     return(
-        <div className={styles.searchBar}>
-            <input type="text" id="search" name="search" placeholder="search" />
-            <label htmlFor="search" className={styles.searchBarLabel} >
+        <form className={styles.searchBar} onSubmit={handleSearch}>
+            <input type="text" id="search" name="search" value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="search" />
+            <label htmlFor="search" className={styles.searchBarLabel} onClick={handleSearch} >
                 <FontAwesomeIcon icon="fa-solid fa-magnifying-glass" />
             </label>
-        </div>
+        </form>
     )
 }
 
