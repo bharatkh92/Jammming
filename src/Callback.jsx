@@ -44,10 +44,12 @@ export default function Callback() {
         });
 
         const data = await response.json();
-        console.log(data);
         // const { access_token } = data; // Spotify returns 'access_token', not 'spotify_access_token'
         console.log("daata");
         console.log(data);
+        const spotify_access_token = data.access_token;
+        console.log(`spotify access token from data.access_token ${spotify_access_token}`)
+        localStorage.setItem("spotify_access_token", spotify_access_token);
         // localStorage.setItem("spotify_access_token", access_token);
         navigate("/"); // redirect back to App
       } catch (err) {
