@@ -12,7 +12,8 @@ export default function Callback() {
     const clientId = "66658c358a2d4036983a5e036dad9f41"; // <-- your Spotify client ID
     const redirectURI =
       "https://codecademyjammingbharatkh92.netlify.app/callback"; // your redirect URI
-
+    console.log(code);
+    console.log(existingAccessToken);
     if (!code || existingAccessToken) {
       console.log(code);
       console.log(existingAccessToken);
