@@ -17,7 +17,7 @@ export default function Callback() {
     if (!code || existingAccessToken) {
       console.log(code);
       console.log(existingAccessToken);
-      // navigate("/"); // Already have token, go home
+      navigate("/"); // Already have token, go home
       return;
     }
 
@@ -56,7 +56,7 @@ export default function Callback() {
     }
 
     getAccessToken();
-  }, [searchParams, navigate]);
+  }, []);
 
   return <div>Loading Spotify authentication...</div>;
 }
