@@ -1,37 +1,20 @@
 import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-// import viteLogo from '/vite.svg'
 import './App.css';
 import PlaylistContainer from './containers/PlaylistContainer';
 import SearchBarContainer from './containers/SearchBarContainer';
 import SearchResultsContainer from './containers/SearchResultsContainer';
 import {ResponseData, PlaylistData} from './MockData';
-
-
-import { redirectToAuthCodeFlow, getAccessToken, getProfile } from './authCodeWithPkce';
-
-
+import { redirectToAuthCodeFlow } from './authCodeWithPkce';
 
 const clientId = "66658c358a2d4036983a5e036dad9f41";
-const params = new URLSearchParams(window.location.search);
-const code = params.get("code");
+const redirectURI = "https://codecademyjammingbharatkh92.netlify.app/callback";
+let spotify_access_token = localStorage.getItem('spotify_access_token');
 
-
-
-if (!code) {
-    redirectToAuthCodeFlow(clientId);
+if(!spotify_access_token) {
+    redirectToAuthCodeFlow(clientId, redirectURI);
 } else {
-    const accessToken = await getAccessToken(clientId, code);
-    localStorage.setItem("accessToken", accessToken);
-    window.location.replace('https://codecademyjammingbharatkh92.netlify.app/');
-
-    // const profile = await getProfile(accessToken);
-    // populateUI(profile);
+  alert("token is granted");
 }
-
-
-
-
 
 
 function App() {
