@@ -44,7 +44,8 @@ export default function Callback() {
         });
 
         const data = await response.json();
-        const { access_token } = data; // Spotify returns 'access_token', not 'spotify_access_token'
+        console.log(data);
+        // const { access_token } = data; // Spotify returns 'access_token', not 'spotify_access_token'
         console.log("daata");
         console.log(data);
         localStorage.setItem("spotify_access_token", access_token);
