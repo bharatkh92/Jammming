@@ -10,18 +10,23 @@ export default function Callback() {
     const code = searchParams.get("code");
     const existingAccessToken = localStorage.getItem("spotify_access_token");
     const clientId = "66658c358a2d4036983a5e036dad9f41"; // <-- your Spotify client ID
-    const redirectURI = "https://codecademyjammingbharatkh92.netlify.app/callback"; // your redirect URI
+    const redirectURI =
+      "https://codecademyjammingbharatkh92.netlify.app/callback"; // your redirect URI
 
     if (!code || existingAccessToken) {
       console.log(code);
       console.log(existingAccessToken);
-      navigate("/");  // Already have token, go home
+      navigate("/"); // Already have token, go home
       return;
     }
 
     async function getAccessToken() {
       try {
         const verifier = localStorage.getItem("verifier");
+        console.log("code:", code);
+        console.log("verifier:", verifier);
+        console.log("redirectURI:", redirectURI);
+        console.log("clientId:", clientId);
 
         const response = await fetch("https://accounts.spotify.com/api/token", {
           method: "POST",
@@ -39,7 +44,7 @@ export default function Callback() {
 
         const data = await response.json();
         const { access_token } = data; // Spotify returns 'access_token', not 'spotify_access_token'
-        console.log('daata'); 
+        console.log("daata");
         console.log(data);
         localStorage.setItem("spotify_access_token", access_token);
         navigate("/"); // redirect back to App
