@@ -9,7 +9,9 @@ function SearchResultsContainer({
 }) {
   const operation = "addTrack";
   function handleAddTrack(id, track, artists, uri, image) {
-    alert(`track ${name} artist ${artists.map((artist) => artist).join(", ")}`);
+    alert(
+      `track ${name} artist ${artists.map((artist) => artist.name).join(", ")}`
+    );
     if (!playlist.find((track) => track.id === id)) {
       let trackObject = response.find((track) => track.id === id);
       setPlaylist((prev) => [...prev, trackObject]);

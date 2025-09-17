@@ -16,9 +16,7 @@ function Track({
       <p id={id} uri={uri}>
         {name} by {artists.map((artist) => artist.name).join(", ")}
       </p>
-      <button onClick={() => handleButtonClick(id, name, artists, uri, image)}>
-        {buttonOperator}
-      </button>
+      <button onClick={() => handleButtonClick(id)}>{buttonOperator}</button>
     </div>
   );
 }
