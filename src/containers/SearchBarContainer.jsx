@@ -6,7 +6,7 @@ function SearchBarContainer({ setResponse }) {
   const [searchText, setSearchText] = useState("");
   async function handleSearch(event) {
     event.preventDefault();
-    const response = spotifySearch(searchText);
+    const response = await spotifySearch(searchText);
     console.log(response);
   }
 
