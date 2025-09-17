@@ -22,7 +22,6 @@ function PlaylistContainer({ playlist, setPlaylist }) {
         Authorization: `Bearer ${spotify_access_token}`,
       },
     };
-    const createPlaylistUrl = `https://api.spotify.com/v1/users/${spotifyUserId}/playlists`;
     const playlistPayload = {
       method: "POST",
       headers: {
@@ -36,7 +35,6 @@ function PlaylistContainer({ playlist, setPlaylist }) {
       }),
     };
     const uriArray = playlist.map((track) => track.uri);
-    const addTracksUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
     const addTracksPayload = {
       method: "POST",
       headers: {
@@ -58,6 +56,8 @@ function PlaylistContainer({ playlist, setPlaylist }) {
       const spotifyUserId = result.id;
       console.log(`userid received ${spotifyUserId}`);
 
+      const createPlaylistUrl = `https://api.spotify.com/v1/users/${spotifyUserId}/playlists`;
+
       const playlistResponse = await fetch(createPlaylistUrl, playlistPayload);
       if (!playlistResponse.ok) {
         console.log(`error ${playlistResponse.status}`);
@@ -65,6 +65,8 @@ function PlaylistContainer({ playlist, setPlaylist }) {
       const playlistResult = await playlistResponse.json();
       const playlistId = playlistResult.id;
       console.log(`playlist created ${playlistId}`);
+
+      const addTracksUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
 
       const addTracksResponse = await fetch(addTracksUrl, addTracksPayload);
       if (!addTracksResponse.ok) {
