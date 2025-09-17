@@ -8,6 +8,14 @@ function SearchBarContainer({ setResponse }) {
     event.preventDefault();
     const response = await spotifySearch(searchText);
     console.log(response);
+    const tracksArray = response.items.map((arrayElement) => ({
+      id: arrayElement.id,
+      name: arrayElement.name,
+      artists: arrayElement.artists,
+      album: arrayElement.album.name,
+      uri: arrayElement.uri,
+    }));
+    tracksArray.map((element) => console.log(element));
   }
 
   return (
