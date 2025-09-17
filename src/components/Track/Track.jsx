@@ -15,7 +15,7 @@ function Track({
     <div className={styles.track}>
       {/* <img src={image.url} height={image.height} width={image.width} /> */}
       <p id={id} uri={uri}>
-        imagelength is {image.url} {name} by{" "}
+        imagelength is {name} by{" "}
         {artists.map((artist) => artist.name).join(", ")} : {album}
       </p>
       <button onClick={() => handleButtonClick(id, name, artists, album)}>

@@ -16,7 +16,7 @@ function SearchBarContainer({ setResponse }) {
       uri: arrayElement.uri,
       image: arrayElement.album.images[2],
     }));
-    tracksArray.map((element) => console.log(element));
+    tracksArray.map((element) => console.log(element.image));
     setResponse(tracksArray);
   }
 
