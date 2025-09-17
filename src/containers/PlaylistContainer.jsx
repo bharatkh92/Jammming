@@ -41,11 +41,11 @@ function PlaylistContainer({ playlist, setPlaylist }) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${spotify_access_token}`,
       },
-      body: {
+      body: JSON.stringify({
         name: playlistName,
         description: "",
         public: false,
-      },
+      }),
     };
 
     try {
@@ -61,17 +61,17 @@ function PlaylistContainer({ playlist, setPlaylist }) {
     }
 
     const uriArray = playlist.map((track) => track.uri);
-    const addTracksUrl = `https://api.spotify.com/v1/playlists/${spotifyUserId}/tracks`;
+    const addTracksUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
     const addTracksPayload = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${spotify_access_token}`,
       },
-      body: {
+      body: JSON.stringify({
         uris: uriArray,
         position: 0,
-      },
+      }),
     };
 
     try {
