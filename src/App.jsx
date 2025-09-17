@@ -29,7 +29,11 @@ function App() {
         <SearchBarContainer setResponse={setResponse} />
       </div>
       <div className="playlistSearchResultsContainer">
-        <PlaylistContainer playlist={playlist} setPlaylist={setPlaylist} />
+        <PlaylistContainer
+          playlist={playlist}
+          setPlaylist={setPlaylist}
+          setResponse={setResponse}
+        />
         <SearchResultsContainer
           response={response}
           setResponse={setResponse}

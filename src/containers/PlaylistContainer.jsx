@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Playlist from "../components/Playlist/Playlist";
 
-function PlaylistContainer({ playlist, setPlaylist }) {
+function PlaylistContainer({ playlist, setPlaylist, setResponse }) {
   const [playlistName, setPlaylistName] = useState("Playlist");
   const [inputToggle, setInputToggle] = useState(false);
 
@@ -78,7 +78,10 @@ function PlaylistContainer({ playlist, setPlaylist }) {
         console.log(`adding tracks failed ${addTracksResponse.status}`);
       }
       const addTracksResult = await addTracksResponse.json();
-      alert(`playlist successfuly created ${addTracksResult.snapshot_id}`);
+      alert(`${playlistName} successfuly created`);
+      setPlaylistName("Playlist");
+      setPlaylist([]);
+      setResponse();
     } catch (e) {
       console.log(e);
     }
