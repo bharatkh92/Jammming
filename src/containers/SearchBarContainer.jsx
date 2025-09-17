@@ -18,6 +18,7 @@ function SearchBarContainer({ setResponse }) {
       image: arrayElement.album.images[2],
     }));
     setResponse(tracksArray);
+    setSearchText("");
   }
 
   return (
