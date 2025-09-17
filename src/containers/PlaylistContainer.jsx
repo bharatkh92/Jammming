@@ -34,8 +34,7 @@ function PlaylistContainer({ playlist, setPlaylist }) {
       console.log(e);
     }
 
-    const createPlaylistUrl =
-      "https://api.spotify.com/v1/users/wfxbiit79cw9pxf7gyv94i05t/playlists";
+    const createPlaylistUrl = `https://api.spotify.com/v1/users/${spotifyUserId}/playlists`;
     const playlistPayload = {
       method: "POST",
       headers: {
@@ -62,8 +61,7 @@ function PlaylistContainer({ playlist, setPlaylist }) {
     }
 
     const uriArray = playlist.map((track) => track.uri);
-    const addTracksUrl =
-      "https://api.spotify.com/v1/playlists/3cEYpjA9oz9GiPac4AsH4n/tracks";
+    const addTracksUrl = `https://api.spotify.com/v1/playlists/${spotifyUserId}/tracks`;
     const addTracksPayload = {
       method: "POST",
       headers: {
