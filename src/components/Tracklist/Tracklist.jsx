@@ -11,7 +11,6 @@ function Tracklist({ data, setData, handleButtonClick, operation }) {
             id={trackObject.id}
             name={trackObject.name}
             artists={trackObject.artists}
-            album={trackObject.album}
             uri={trackObject.uri}
             image={trackObject.image}
             key={index}

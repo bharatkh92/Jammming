@@ -5,7 +5,6 @@ function TrackContainer({
   id,
   name,
   artists,
-  album,
   uri,
   image,
   handleButtonClick,
@@ -18,7 +17,6 @@ function TrackContainer({
           id={id}
           name={name}
           artists={artists}
-          album={album}
           uri={uri}
           image={image}
           handleButtonClick={handleButtonClick}
@@ -29,7 +27,6 @@ function TrackContainer({
           id={id}
           name={name}
           artists={artists}
-          album={album}
           uri={uri}
           image={image}
           handleButtonClick={handleButtonClick}

@@ -3,7 +3,6 @@ import "./App.css";
 import PlaylistContainer from "./containers/PlaylistContainer";
 import SearchBarContainer from "./containers/SearchBarContainer";
 import SearchResultsContainer from "./containers/SearchResultsContainer";
-import { ResponseData, PlaylistData } from "./MockData";
 import { redirectToAuthCodeFlow } from "./authCodeWithPkce";
 
 const clientId = "66658c358a2d4036983a5e036dad9f41";
@@ -11,7 +10,7 @@ const redirectURI = "https://codecademyjammingbharatkh92.netlify.app/callback";
 
 function App() {
   const [response, setResponse] = useState();
-  const [playlist, setPlaylist] = useState();
+  const [playlist, setPlaylist] = useState([]);
 
   useEffect(() => {
     let spotify_access_token = localStorage.getItem("spotify_access_token");

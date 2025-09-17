@@ -5,7 +5,6 @@ function Track({
   id,
   name,
   artists,
-  album,
   uri,
   image,
   handleButtonClick,
@@ -15,9 +14,9 @@ function Track({
     <div className={styles.track}>
       <img src={image.url} height={image.height} width={image.width} />
       <p id={id} uri={uri}>
-        {name} by {artists.map((artist) => artist.name).join(", ")} : {album}
+        {name} by {artists.map((artist) => artist.name).join(", ")}
       </p>
-      <button onClick={() => handleButtonClick(id, name, artists, album)}>
+      <button onClick={() => handleButtonClick(id, name, artists, uri, image)}>
         {buttonOperator}
       </button>
     </div>

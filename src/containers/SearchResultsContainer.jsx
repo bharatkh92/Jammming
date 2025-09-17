@@ -8,8 +8,13 @@ function SearchResultsContainer({
   setPlaylist,
 }) {
   const operation = "addTrack";
-  function handleAddTrack(id, track, artist, album) {
-    // alert(`track ${track} artist ${artist} album${album}`)
+  function handleAddTrack(id, track, artists, uri, image) {
+    alert(`track ${name} artist ${artists.map((artist) => artist).join(", ")}`);
+    if (!playlist.find((track) => track.id === id)) {
+      let trackObject = response.find((track) => track.id === id);
+      setPlaylist((prev) => [...prev, trackObject]);
+    }
+
     // if (!playlist.find((trackObject) => trackObject.track === track)) {
     //   setPlaylist((prev) => [...prev, { track, artist, album, id }]);
     // }

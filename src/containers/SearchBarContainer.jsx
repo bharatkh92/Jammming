@@ -12,7 +12,6 @@ function SearchBarContainer({ setResponse }) {
       id: arrayElement.id,
       name: arrayElement.name,
       artists: arrayElement.artists,
-      album: arrayElement.album.name,
       uri: arrayElement.uri,
       image: arrayElement.album.images[2],
     }));
