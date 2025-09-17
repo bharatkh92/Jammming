@@ -5,9 +5,11 @@ import { spotifySearch } from "../authCodeWithPkce";
 function SearchBarContainer({ setResponse }) {
   const [searchText, setSearchText] = useState("");
   async function handleSearch(event) {
+    // prevent page from reloading
     event.preventDefault();
+    // fetch search results from spotify
     const response = await spotifySearch(searchText);
-    console.log(response);
+    // adding results to the searchResults container
     const tracksArray = response.tracks.items.map((arrayElement) => ({
       id: arrayElement.id,
       name: arrayElement.name,
@@ -15,7 +17,6 @@ function SearchBarContainer({ setResponse }) {
       uri: arrayElement.uri,
       image: arrayElement.album.images[2],
     }));
-    tracksArray.map((element) => console.log(element.image));
     setResponse(tracksArray);
   }
 

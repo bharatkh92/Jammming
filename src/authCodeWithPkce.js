@@ -50,7 +50,7 @@ export async function spotifySearch(searchText) {
 
     try{
         const response = await fetch(searchUrl, payload);
-        
+        // refreshing token after expiry
         if(response.status === 401 && refresh_token) {
             const url = `https://accounts.spotify.com/api/token`;
             const client_id = '66658c358a2d4036983a5e036dad9f41';

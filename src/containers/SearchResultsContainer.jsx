@@ -7,16 +7,13 @@ function SearchResultsContainer({
   playlist,
   setPlaylist,
 }) {
+  // using same Tracklist component for both searchresults and playlist operation is add or remove track
   const operation = "addTrack";
   function handleAddTrack(id) {
     if (!playlist.find((track) => track.id === id)) {
       let trackObject = response.find((track) => track.id === id);
       setPlaylist((prev) => [...prev, trackObject]);
     }
-
-    // if (!playlist.find((trackObject) => trackObject.track === track)) {
-    //   setPlaylist((prev) => [...prev, { track, artist, album, id }]);
-    // }
   }
   return (
     <>

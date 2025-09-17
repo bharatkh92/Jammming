@@ -6,14 +6,17 @@ function PlaylistContainer({ playlist, setPlaylist }) {
   const [inputToggle, setInputToggle] = useState(false);
 
   function handlePlaylistName(e) {
+    // toggle to edit and save the playlist name
     setInputToggle(false);
   }
 
   function handleRemoveTrack(id) {
+    // filtering out and removing the songs from the playlist
     setPlaylist((prev) => prev.filter((trackObject) => trackObject.id != id));
   }
 
   async function handleSaveToSpotify() {
+    // Getting user ID for create playlist request
     const url = "https://api.spotify.com/v1/me";
     const spotify_access_token = localStorage.getItem("spotify_access_token");
     const payload = {
@@ -22,6 +25,7 @@ function PlaylistContainer({ playlist, setPlaylist }) {
         Authorization: `Bearer ${spotify_access_token}`,
       },
     };
+    // payload for creating a new playlist
     const playlistPayload = {
       method: "POST",
       headers: {
@@ -34,7 +38,9 @@ function PlaylistContainer({ playlist, setPlaylist }) {
         public: false,
       }),
     };
+    // extracting uri from the playlist to send the request
     const uriArray = playlist.map((track) => track.uri);
+    // payload for adding tracks to a newly created playlist
     const addTracksPayload = {
       method: "POST",
       headers: {
@@ -48,32 +54,31 @@ function PlaylistContainer({ playlist, setPlaylist }) {
     };
 
     try {
+      // fetching spotify user ID
       const response = await fetch(url, payload);
       if (!response.ok) {
         console.log(`error ${response.status}`);
       }
       const result = await response.json();
       const spotifyUserId = result.id;
-      console.log(`userid received ${spotifyUserId}`);
 
+      // creating new playlist
       const createPlaylistUrl = `https://api.spotify.com/v1/users/${spotifyUserId}/playlists`;
-
       const playlistResponse = await fetch(createPlaylistUrl, playlistPayload);
       if (!playlistResponse.ok) {
         console.log(`error ${playlistResponse.status}`);
       }
       const playlistResult = await playlistResponse.json();
       const playlistId = playlistResult.id;
-      console.log(`playlist created ${playlistId}`);
 
+      //adding tracks to the new playlist
       const addTracksUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
-
       const addTracksResponse = await fetch(addTracksUrl, addTracksPayload);
       if (!addTracksResponse.ok) {
         console.log(`adding tracks failed ${addTracksResponse.status}`);
       }
       const addTracksResult = await addTracksResponse.json();
-      alert(addTracksResult);
+      alert(`playlist successfuly created ${addTracksResult.snapshot_id}`);
     } catch (e) {
       console.log(e);
     }

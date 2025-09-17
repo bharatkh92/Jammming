@@ -12,6 +12,7 @@ function TrackContainer({
 }) {
   return (
     <>
+      {/* adding addition and deleting buttons */}
       {operation === "addTrack" ? (
         <Track
           id={id}
