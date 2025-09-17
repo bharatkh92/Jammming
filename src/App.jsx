@@ -11,7 +11,7 @@ const redirectURI = "https://codecademyjammingbharatkh92.netlify.app/callback";
 
 function App() {
   const [response, setResponse] = useState();
-  const [playlist, setPlaylist] = useState(PlaylistData);
+  const [playlist, setPlaylist] = useState();
 
   useEffect(() => {
     let spotify_access_token = localStorage.getItem("spotify_access_token");

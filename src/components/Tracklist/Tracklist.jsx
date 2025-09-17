@@ -10,9 +10,10 @@ function Tracklist({ data, setData, handleButtonClick, operation }) {
         data.map((trackObject, index) => (
           <TrackContainer
             id={trackObject.id}
-            track={trackObject.track}
-            artist={trackObject.artist}
+            name={trackObject.name}
+            artists={trackObject.artists}
             album={trackObject.album}
+            uri={trackObject.uri}
             key={index}
             handleButtonClick={handleButtonClick}
             operation={operation}

@@ -10,13 +10,13 @@ function PlaylistContainer({playlist, setPlaylist}) {
     }
 
     function handleRemoveTrack(id, track, artist, album) {
-        setPlaylist((prev) => prev.filter(trackObject => trackObject.track != track));
+        // setPlaylist((prev) => prev.filter(trackObject => trackObject.track != track));
     }
 
     function handleSaveToSpotify() {
-        let uriArray = [];
-        playlist.map(trackObject => uriArray.push(trackObject.uri));
-        alert(uriArray);
+        // let uriArray = [];
+        // playlist.map(trackObject => uriArray.push(trackObject.uri));
+        // alert(uriArray);
     }
 
     return(

@@ -16,6 +16,7 @@ function SearchBarContainer({ setResponse }) {
       uri: arrayElement.uri,
     }));
     tracksArray.map((element) => console.log(element));
+    setResponse(tracksArray);
   }
 
   return (
