@@ -7,11 +7,13 @@ function Track({
   artists,
   album,
   uri,
+  image,
   handleButtonClick,
   buttonOperator,
 }) {
   return (
     <div className={styles.track}>
+      <img src={image.url} height={image.height} width={image.width} />
       <p id={id} uri={uri}>
         {name} by {artists.map((artist) => artist.name).join(", ")} : {album}
       </p>
