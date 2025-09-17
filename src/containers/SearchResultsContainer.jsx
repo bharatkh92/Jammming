@@ -8,10 +8,8 @@ function SearchResultsContainer({
   setPlaylist,
 }) {
   const operation = "addTrack";
-  function handleAddTrack(id, track, artists, uri, image) {
-    alert(
-      `track ${name} artist ${artists.map((artist) => artist.name).join(", ")}`
-    );
+  function handleAddTrack(id) {
+    alert(`track ${id}`);
     if (!playlist.find((track) => track.id === id)) {
       let trackObject = response.find((track) => track.id === id);
       setPlaylist((prev) => [...prev, trackObject]);
