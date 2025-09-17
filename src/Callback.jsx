@@ -8,26 +8,13 @@ export default function Callback() {
 
   useEffect(() => {
     const code = searchParams.get("code");
-    const existingAccessToken = localStorage.getItem("spotify_access_token");
     const clientId = "66658c358a2d4036983a5e036dad9f41"; // <-- your Spotify client ID
     const redirectURI =
       "https://codecademyjammingbharatkh92.netlify.app/callback"; // your redirect URI
-    console.log(`code in callback ${code}`);
-    console.log(`existing access token ${existingAccessToken}`);
-    if (!code || existingAccessToken) {
-      console.log(code);
-      console.log(existingAccessToken);
-      navigate("/"); // Already have token, go home
-      return;
-    }
 
     async function getAccessToken() {
       try {
         const verifier = localStorage.getItem("verifier");
-        console.log("code:", code);
-        console.log("verifier:", verifier);
-        console.log("redirectURI:", redirectURI);
-        console.log("clientId:", clientId);
 
         const response = await fetch("https://accounts.spotify.com/api/token", {
           method: "POST",
@@ -43,18 +30,14 @@ export default function Callback() {
           }),
         });
 
+        // response from sotify with access and refresh token which expires in 3600 secs
         const data = await response.json();
-        // const { access_token } = data; // Spotify returns 'access_token', not 'spotify_access_token'
-        console.log("daata");
-        console.log(data);
-        alert(data);
         const spotify_access_token = data.access_token;
-        console.log(
-          `spotify access token from data.access_token ${spotify_access_token}`
-        );
+        const spotify_refresh_token = data.refresh_token;
         localStorage.setItem("spotify_access_token", spotify_access_token);
-        // localStorage.setItem("spotify_access_token", access_token);
-        navigate("/"); // redirect back to App
+        localStorage.setItem("spotify_refresh_token", spotify_refresh_token);
+        // redirect back to App
+        navigate("/");
       } catch (err) {
         console.error("Error fetching Spotify token:", err);
       }
