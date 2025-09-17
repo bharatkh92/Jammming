@@ -9,7 +9,6 @@ function SearchResultsContainer({
 }) {
   const operation = "addTrack";
   function handleAddTrack(id) {
-    alert(`track ${id}`);
     if (!playlist.find((track) => track.id === id)) {
       let trackObject = response.find((track) => track.id === id);
       setPlaylist((prev) => [...prev, trackObject]);
