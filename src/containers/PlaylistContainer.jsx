@@ -22,18 +22,6 @@ function PlaylistContainer({ playlist, setPlaylist }) {
         Authorization: `Bearer ${spotify_access_token}`,
       },
     };
-    try {
-      const response = await fetch(url, payload);
-      if (!response.ok) {
-        console.log(`error ${response.status}`);
-      }
-      const result = await response.json();
-      const spotifyUserId = result.id;
-      console.log(`userid received ${spotifyUserId}`);
-    } catch (e) {
-      console.log(e);
-    }
-
     const createPlaylistUrl = `https://api.spotify.com/v1/users/${spotifyUserId}/playlists`;
     const playlistPayload = {
       method: "POST",
@@ -47,19 +35,6 @@ function PlaylistContainer({ playlist, setPlaylist }) {
         public: false,
       }),
     };
-
-    try {
-      const playlistResponse = await fetch(createPlaylistUrl, playlistPayload);
-      if (!playlistResponse.ok) {
-        console.log(`error ${playlistResponse.status}`);
-      }
-      const playlistResult = await playlistResponse.json();
-      const playlistId = playlistResult.id;
-      console.log(`playlist created ${playlistId}`);
-    } catch (e) {
-      console.log(e);
-    }
-
     const uriArray = playlist.map((track) => track.uri);
     const addTracksUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
     const addTracksPayload = {
@@ -75,6 +50,22 @@ function PlaylistContainer({ playlist, setPlaylist }) {
     };
 
     try {
+      const response = await fetch(url, payload);
+      if (!response.ok) {
+        console.log(`error ${response.status}`);
+      }
+      const result = await response.json();
+      const spotifyUserId = result.id;
+      console.log(`userid received ${spotifyUserId}`);
+
+      const playlistResponse = await fetch(createPlaylistUrl, playlistPayload);
+      if (!playlistResponse.ok) {
+        console.log(`error ${playlistResponse.status}`);
+      }
+      const playlistResult = await playlistResponse.json();
+      const playlistId = playlistResult.id;
+      console.log(`playlist created ${playlistId}`);
+
       const addTracksResponse = await fetch(addTracksUrl, addTracksPayload);
       if (!addTracksResponse.ok) {
         console.log(`adding tracks failed ${addTracksResponse.status}`);
