@@ -10,9 +10,7 @@ function PlaylistContainer({ playlist, setPlaylist }) {
   }
 
   function handleRemoveTrack(id) {
-    setPlaylist((prev) =>
-      prev.filter((trackObject) => trackObject.track != id)
-    );
+    setPlaylist((prev) => prev.filter((trackObject) => trackObject.id != id));
   }
 
   function handleSaveToSpotify() {
