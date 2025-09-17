@@ -14,7 +14,7 @@ function SearchBarContainer({ setResponse }) {
       artists: arrayElement.artists,
       album: arrayElement.album.name,
       uri: arrayElement.uri,
-      image: arrayElement.album.images[2],
+      image: arrayElement.album.images.length,
     }));
     tracksArray.map((element) => console.log(element));
     setResponse(tracksArray);
