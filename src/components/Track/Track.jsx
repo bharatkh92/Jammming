@@ -13,7 +13,7 @@ function Track({
   return (
     <div className={styles.track}>
       <p id={id} uri={uri}>
-        {name} by {artists.map((artist) => artist).join(", ")} : {album}
+        {name} by {artists.map((artist) => artist.name).join(", ")} : {album}
       </p>
       <button onClick={() => handleButtonClick(id, name, artists, album)}>
         {buttonOperator}

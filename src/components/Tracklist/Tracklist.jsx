@@ -3,7 +3,6 @@ import TrackContainer from "../../containers/TrackContainer";
 import styles from "./Tracklist.module.css";
 
 function Tracklist({ data, setData, handleButtonClick, operation }) {
-  console.log(`data in tracklist ${data}`);
   return (
     <div className={styles.tracklist}>
       {data &&
