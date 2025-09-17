@@ -13,6 +13,7 @@ function Tracklist({ data, setData, handleButtonClick, operation }) {
             artists={trackObject.artists}
             album={trackObject.album}
             uri={trackObject.uri}
+            image={trackObject.image}
             key={index}
             handleButtonClick={handleButtonClick}
             operation={operation}
