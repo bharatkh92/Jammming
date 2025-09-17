@@ -39,8 +39,8 @@ export async function redirectToAuthCodeFlow(clientId, redirectURI) {
 
 export async function spotifySearch(searchText) {
     const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchText)}&type=track`;
-    const token = localStorage.getItem(spotify_access_token);
-    const refresh_token = localStorage.getItem(spotify_refresh_token);
+    const token = localStorage.getItem('spotify_access_token');
+    const refresh_token = localStorage.getItem('spotify_refresh_token');
     const payload = {
         method: 'GET',
         headers: {
