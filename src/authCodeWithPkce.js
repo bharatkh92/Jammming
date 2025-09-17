@@ -28,7 +28,7 @@ export async function redirectToAuthCodeFlow(clientId, redirectURI) {
         client_id: clientId,
         response_type: "code",
         redirect_uri: redirectURI,
-        scope: "user-read-private user-read-email playlist-modify-private",
+        scope: "user-read-private user-read-email playlist-modify-private playlist-modify-public",
         code_challenge_method: "S256",
         code_challenge: challenge, 
     });
