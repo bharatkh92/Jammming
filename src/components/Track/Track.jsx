@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./Track.module.css";
 
 function Track({
@@ -11,12 +10,20 @@ function Track({
   buttonOperator,
 }) {
   return (
-    <div className={styles.track}>
-      <img src={image.url} height={image.height} width={image.width} />
-      <p id={id} uri={uri}>
-        {name} by {artists.map((artist) => artist.name).join(", ")}
-      </p>
-      <button onClick={() => handleButtonClick(id)}>{buttonOperator}</button>
+    <div className={styles.track} onClick={() => handleButtonClick(id)}>
+      <img
+        className={styles.imageContainer}
+        src={image.url}
+        height={image.height}
+        width={image.width}
+      />
+      <div className={styles.textContainer}>
+        <p id={id} uri={uri}>
+          {name}
+        </p>
+        <p>{artists.map((artist) => artist.name).join(", ")}</p>
+      </div>
+      <button className={styles.buttonContainer}>{buttonOperator}</button>
     </div>
   );
 }

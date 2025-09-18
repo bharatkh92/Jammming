@@ -1,11 +1,28 @@
 .searchResults {
-    width: 50%;
+    width: 49%;
     display: flex;
+    margin: 0 auto;
+    padding-bottom: .5%;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    background-color: #393E46;
+    border-radius: 3% 3% 3% 3% / 1% 1% 1% 1%;
 }
+
 
 .searchResultsTitle {
     margin: 10px 0;
+    padding: 1.5% 0;
+    font-size: 1.2rem;
+}
+
+@media screen and (max-width: 700px) {
+    .searchResults {
+        width: 99%;
+    }
+
+    .searchResultsTitle {
+        font-size: 1rem;
+    }
 }

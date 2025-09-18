@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import SearchResults from "../components/SearchResults/SearchResults";
 
 function SearchResultsContainer({

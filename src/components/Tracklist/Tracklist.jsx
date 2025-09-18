@@ -1,4 +1,3 @@
-import React from "react";
 import TrackContainer from "../../containers/TrackContainer";
 import styles from "./Tracklist.module.css";
 

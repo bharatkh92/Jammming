@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./SearchBar.module.css";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,7 +17,7 @@ function SearchBar({ searchText, setSearchText, handleSearch }) {
         name="search"
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
-        placeholder="search"
+        placeholder="start searching"
       />
       <label
         htmlFor="search"
