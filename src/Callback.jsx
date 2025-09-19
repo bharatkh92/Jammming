@@ -34,6 +34,8 @@ export default function Callback() {
         const data = await response.json();
         const spotify_access_token = data.access_token;
         const spotify_refresh_token = data.refresh_token;
+        console.log(`spotify_access_token, ${spotify_access_token}`);
+        console.log(`spotify_refresh_token, ${spotify_refresh_token}`);
         localStorage.setItem("spotify_access_token", spotify_access_token);
         localStorage.setItem("spotify_refresh_token", spotify_refresh_token);
         // redirect back to App

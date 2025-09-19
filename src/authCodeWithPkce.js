@@ -40,6 +40,7 @@ export async function redirectToAuthCodeFlow(clientId, redirectURI) {
 export async function spotifySearch(searchText) {
     const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchText)}&type=track`;
     const token = localStorage.getItem('spotify_access_token');
+    console.log(`log from spotify search token ${token}`)
     const refresh_token = localStorage.getItem('spotify_refresh_token');
     const payload = {
         method: 'GET',
@@ -52,6 +53,7 @@ export async function spotifySearch(searchText) {
         const response = await fetch(searchUrl, payload);
         // refreshing token after expiry
         if(response.status === 401 && refresh_token) {
+            console.log("entering 401 refresh token");
             const url = `https://accounts.spotify.com/api/token`;
             const client_id = '66658c358a2d4036983a5e036dad9f41';
             const payload = {
@@ -74,6 +76,7 @@ export async function spotifySearch(searchText) {
             
             localStorage.setItem('spotify_access_token', new_spotify_access_token);
             localStorage.setItem('spotify_refresh_token', new_spotify_refresh_token);
+            console.log(`log from inside 401 if spotify search token ${new_spotify_access_token}`);
 
             const searchResponse = await fetch(searchUrl, {
                 method: 'GET',
@@ -87,6 +90,7 @@ export async function spotifySearch(searchText) {
         }
 
         const result = await response.json();
+        console.log("didn't enter refresh toekn");
         return result;
     } catch(e) {
         console.log(e);
