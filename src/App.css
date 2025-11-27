@@ -1,15 +1,16 @@
-#root {
-  /* max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center; */
-}
 
 .app {
   width: 100%;
-  background-color: yellow;
+  background-color: #222831;
 }
 
 .playlistSearchResultsContainer {
   display: flex;
+}
+
+@media screen and (max-width: 700px) {
+  .playlistSearchResultsContainer{
+    display: flex;
+    flex-direction: column-reverse;
+  }
 }

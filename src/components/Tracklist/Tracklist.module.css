@@ -1,9 +1,18 @@
 .tracklist {
-    background-color: blue;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 98%;
+    background-color: #222831;
     margin: 0 auto;
+    padding: 5% 0 3% 0;
+    border-radius: 3% 3% 3% 3% / 1% 1% 1% 1%;
+
+}
+
+@media screen and (max-width: 700px) {
+    .tracklist {
+        padding: 3% 0 1% 0;
+    }
 }

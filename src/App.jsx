@@ -1,55 +1,47 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-// import viteLogo from '/vite.svg'
-import './App.css';
-import PlaylistContainer from './containers/PlaylistContainer';
-import SearchBarContainer from './containers/SearchBarContainer';
-import SearchResultsContainer from './containers/SearchResultsContainer';
-import {ResponseData, PlaylistData} from './MockData';
-
-
-import { redirectToAuthCodeFlow, getAccessToken, getProfile } from './authCodeWithPkce';
-
-
-
-const clientId = "66658c358a2d4036983a5e036dad9f41";
-const params = new URLSearchParams(window.location.search);
-const code = params.get("code");
-
-
-
-if (!code) {
-    redirectToAuthCodeFlow(clientId);
-} else {
-    const accessToken = await getAccessToken(clientId, code);
-    localStorage.setItem("accessToken", accessToken);
-    window.location.replace('https://codecademyjammingbharatkh92.netlify.app/');
-
-    // const profile = await getProfile(accessToken);
-    // populateUI(profile);
-}
-
-
-
-
-
+import { useEffect, useState } from "react";
+import "./App.css";
+import PlaylistContainer from "./containers/PlaylistContainer";
+import SearchBarContainer from "./containers/SearchBarContainer";
+import SearchResultsContainer from "./containers/SearchResultsContainer";
+import { useOutletContext } from "react-router";
+import { getUserAuth } from "./authCodeWithPkce";
 
 function App() {
-  const [response, setResponse] = useState(ResponseData);
-  const [playlist, setPlaylist] = useState(PlaylistData);
+  // states to store search results and playlist tracks
+  const [response, setResponse] = useState();
+  const [playlist, setPlaylist] = useState([]);
+  const { isLoggedIn, setIsLoggedIn} =
+    useOutletContext();
 
+  useEffect(() => {
+    if (!isLoggedIn) {
+      getUserAuth();
+    }
+  }, []);
+  
   return (
-    <div className='app'>
-      <div className='searchBarContainer'>
-      <SearchBarContainer />
-      </div>
-      <div className='playlistSearchResultsContainer'>
-        <PlaylistContainer playlist={playlist} setPlaylist={setPlaylist} />
-        <SearchResultsContainer response={response} setResponse={setResponse} playlist={playlist} setPlaylist={setPlaylist} />
-      </div>
-      
-    </div>
-  )
+    <div className="app">
+          <div className="searchBarContainer">
+            <SearchBarContainer setResponse={setResponse} />
+          </div>
+          <div>
+            <h1>{isLoggedIn ? "loggedIn" : "loggedout"}</h1>
+          </div>
+          <div className="playlistSearchResultsContainer">
+            <PlaylistContainer
+              playlist={playlist}
+              setPlaylist={setPlaylist}
+              setResponse={setResponse}
+            />
+            <SearchResultsContainer
+              response={response}
+              setResponse={setResponse}
+              playlist={playlist}
+              setPlaylist={setPlaylist}
+            />
+          </div>
+        </div>
+  );
 }
 
-export default App
+export default App;
