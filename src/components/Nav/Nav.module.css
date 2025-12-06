@@ -1,0 +1,42 @@
+.nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: 3rem;
+    font-size: 1.25rem;
+    padding: 0 1rem 1rem 0;
+    border-bottom: 1px solid #93faa3;
+    /* box-shadow: 0px 1px 2px #93faa3 ; */
+}
+
+.username {
+    position: absolute;
+    top: -0.6rem;
+    left: 1rem;
+    font-size: 1.25rem;
+}
+
+.link {
+    color: rgba(255, 255, 255, 0.87);
+}
+
+.active {
+    color: #93faa3;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.icon {
+    padding-left: 0.5rem;
+}
+
+@media screen and (max-width: 450px)  {
+    .nav {
+        font-size: 1rem;
+        gap: 1rem;
+    }
+
+    .username {
+        font-size: 1rem;
+        top: -0.35rem;
+    }
+}

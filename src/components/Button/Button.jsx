@@ -1,8 +1,12 @@
 function Button({ buttonText, buttonOnClickHandler }) {
   return (
-    <>
-      <input type="button" value={buttonText} onClick={() => buttonOnClickHandler(buttonText)} />
-    </>
+    <li>
+      <a
+        type="button"
+        value={buttonText}
+        onClick={() => buttonOnClickHandler(buttonText)}
+      ></a>
+    </li>
   );
 }
 

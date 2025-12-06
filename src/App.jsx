@@ -10,9 +10,8 @@ function App() {
   // states to store search results and playlist tracks
   const [response, setResponse] = useState();
   const [playlist, setPlaylist] = useState([]);
-  const { isLoggedIn, setIsLoggedIn} =
+  const { isLoggedIn } =
     useOutletContext();
-
   useEffect(() => {
     if (!isLoggedIn) {
       getUserAuth();
@@ -23,9 +22,6 @@ function App() {
     <div className="app">
           <div className="searchBarContainer">
             <SearchBarContainer setResponse={setResponse} />
-          </div>
-          <div>
-            <h1>{isLoggedIn ? "loggedIn" : "loggedout"}</h1>
           </div>
           <div className="playlistSearchResultsContainer">
             <PlaylistContainer

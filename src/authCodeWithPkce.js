@@ -43,7 +43,7 @@ export const getUserAuth = async () => {
 };
 
 // function to get access token using auth code
-export const getToken = async (code) => {
+export const getToken = async (code, setUsername) => {
   // stored in the previous step
   const codeVerifier = localStorage.getItem("code_verifier");
 
@@ -68,6 +68,8 @@ export const getToken = async (code) => {
     if (response.ok) {
       localStorage.setItem("spotify_access_token", data.access_token);
       localStorage.setItem("spotify_refresh_token", data.refresh_token);
+      const username = await fetchUsername();
+      setUsername(username);
       return true;
     } else {
       console.log(`error response is ${response}`);
@@ -75,6 +77,29 @@ export const getToken = async (code) => {
     }
   } catch (e) {
     console.log(`error access token request failed ${e}`);
+  }
+};
+
+export const fetchUsername = async () => {
+  const userProfileUrl = "https://api.spotify.com/v1/me";
+  const spotify_access_token = localStorage.getItem("spotify_access_token");
+
+  const payload = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${spotify_access_token}`,
+    },
+  };
+
+  try {
+    const response = await fetch(userProfileUrl, payload);
+    if(response.ok) {
+      const result = await response.json();
+      localStorage.setItem("username", result.display_name);
+      return result.display_name;
+    }
+  } catch (e) {
+    console.log(`error fetching username ${e}`);
   }
 };
 
@@ -115,7 +140,7 @@ export async function spotifySearch(searchText) {
   const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(
     searchText
   )}&type=track`;
-  // searching using access token 
+  // searching using access token
   const spotify_access_token = localStorage.getItem("spotify_access_token");
   const payload = {
     method: "GET",
@@ -128,27 +153,26 @@ export async function spotifySearch(searchText) {
     const response = await fetch(searchUrl, payload);
     // refreshing token after expiry
     if (response.status === 401) {
-        console.log("entering 401 refresh token");
+      console.log("entering 401 refresh token");
       const refreshTokenResponse = await getRefreshToken();
-      if(!refreshTokenResponse){
-        console.error('error while refreshing token');
+      if (!refreshTokenResponse) {
+        console.error("error while refreshing token");
       }
       // searching with new refreshed access token
-          const searchResponse = await fetch(searchUrl, {
-              method: "GET",
-              headers: {
+      const searchResponse = await fetch(searchUrl, {
+        method: "GET",
+        headers: {
           Authorization: `Bearer ${localStorage.getItem(
             "spotify_access_token"
           )}`,
-                },
-            });
-            const searchResult = await searchResponse.json();
-            return searchResult;
+        },
+      });
+      const searchResult = await searchResponse.json();
+      return searchResult;
     }
     const result = await response.json();
     return result;
   } catch (e) {
-    console.log(e);
-    console.error(e);
+    console.log(`error while seraching ${e}`);
   }
 }

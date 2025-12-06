@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SearchBar from "../components/SearchBar/SearchBar";
 import { spotifySearch } from "../authCodeWithPkce";
 
-function SearchBarContainer({ setResponse }) {
+function SearchBarContainer({ setResponse, username }) {
   const [searchText, setSearchText] = useState("");
   async function handleSearch(event) {
     // prevent page from reloading
@@ -27,6 +27,7 @@ function SearchBarContainer({ setResponse }) {
         searchText={searchText}
         setSearchText={setSearchText}
         handleSearch={handleSearch}
+        username={username}
       />
     </>
   );

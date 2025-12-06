@@ -1,4 +1,5 @@
 .searchBar {
+    /* flex-grow: 9; */
     display: flex;
     gap: 1%;
     justify-content: center;
