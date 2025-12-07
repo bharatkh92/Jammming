@@ -1,0 +1,42 @@
+.library {
+    width: 49%;
+    display: flex;
+    margin: 1% auto 0 auto;
+    padding: 0 1%;
+    padding-bottom: .5%;
+    flex-direction: column;
+    align-items: center;
+    background-color: #393E46;
+    border-radius: 10px;
+}
+
+.libraryTitle {
+    font-size: 1.2rem;
+}
+
+.listContainer {
+    background-color: #222831;
+    text-align: left;
+    border-radius: 8px;
+    padding: 5% 3% 3% 3%;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.playlistName  {
+    padding: 1% auto;
+    margin: 1% 0;
+    border-radius: 8px;
+    background-color: #393E46;
+}
+
+.playlist {
+    padding-left: 5%;
+}
+
+@media screen and (max-width: 700px) {
+    .library {
+        width: auto;
+    }
+}

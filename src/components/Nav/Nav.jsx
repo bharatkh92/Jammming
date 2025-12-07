@@ -6,7 +6,7 @@ import { fas } from "@fortawesome/free-solid-svg-icons";
 
 library.add(fas);
 
-export default function Nav({ isLoggedIn, handleLogout, username }) {
+export default function Nav({ isLoggedIn, handleLogout, userProfile }) {
   const handleNavLinkCss = ({ isActive }) => {
     return isActive ? `${styles.active} ${styles.link}` : `${styles.link}`;
   };
@@ -40,7 +40,7 @@ export default function Nav({ isLoggedIn, handleLogout, username }) {
         </NavLink>
       )}
       <div className={styles.username}>
-        <p>{username ? username : ""}</p>
+        {userProfile.username ? <p><FontAwesomeIcon icon="fa-solid fa-user" />{`  ${userProfile.username}`}</p>   : ""}
       </div>
     </nav>
   );

@@ -3,7 +3,7 @@ import { getToken } from "./authCodeWithPkce";
 import { useNavigate, useOutletContext } from "react-router";
 
 export default function Callback() {
-  const { setIsLoggedIn, setUsername } = useOutletContext();
+  const { setIsLoggedIn, setUserProfile, setUserPlaylists } = useOutletContext();
   let navigate = useNavigate();
   const isGetTokenCalled = useRef(false);
   useEffect(() => {
@@ -12,7 +12,7 @@ export default function Callback() {
       const code = urlParams.get("code");
       if (!isGetTokenCalled.current && code) {
         isGetTokenCalled.current = true;
-        const newToken = await getToken(code, setUsername);
+        const newToken = await getToken(code, setUserProfile, setUserPlaylists);
         if (newToken) {
           setIsLoggedIn(true);
           navigate("/app");

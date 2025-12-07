@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SearchBar from "../components/SearchBar/SearchBar";
 import { spotifySearch } from "../authCodeWithPkce";
 
-function SearchBarContainer({ setResponse, username }) {
+function SearchBarContainer({ setResponse }) {
   const [searchText, setSearchText] = useState("");
   async function handleSearch(event) {
     // prevent page from reloading
@@ -10,7 +10,7 @@ function SearchBarContainer({ setResponse, username }) {
     // fetch search results from spotify
     const response = await spotifySearch(searchText);
     // adding results to the searchResults container
-    const tracksArray = response.tracks.items.map((arrayElement) => ({
+    const tracksArray = response.map((arrayElement) => ({
       id: arrayElement.id,
       name: arrayElement.name,
       artists: arrayElement.artists,
@@ -27,7 +27,6 @@ function SearchBarContainer({ setResponse, username }) {
         searchText={searchText}
         setSearchText={setSearchText}
         handleSearch={handleSearch}
-        username={username}
       />
     </>
   );

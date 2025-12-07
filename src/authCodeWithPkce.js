@@ -18,7 +18,7 @@ const base64encode = (input) => {
 
 // add your spotify app developper client ID and redirectURI here
 const clientId = "66658c358a2d4036983a5e036dad9f41";
-const redirectUri = "http://127.0.0.1:5173/callback";
+const redirectUri = "https://codecademyjammingbharatkh92.netlify.app/callback";
 
 // function to get auth code to later request access token for api calls
 export const getUserAuth = async () => {
@@ -27,7 +27,7 @@ export const getUserAuth = async () => {
   const codeChallenge = base64encode(hashed);
   const scope =
     "user-read-private user-read-email playlist-modify-private playlist-modify-public";
-  const authUrl = new URL("https://accounts.spotify.com/authorize");
+  const authEndpoint = new URL("https://accounts.spotify.com/authorize");
   // generated in the previous step
   window.localStorage.setItem("code_verifier", codeVerifier);
   const params = {
@@ -38,12 +38,12 @@ export const getUserAuth = async () => {
     code_challenge: codeChallenge,
     redirect_uri: redirectUri,
   };
-  authUrl.search = new URLSearchParams(params).toString();
-  window.location.href = authUrl.toString();
+  authEndpoint.search = new URLSearchParams(params).toString();
+  window.location.href = authEndpoint.toString();
 };
 
 // function to get access token using auth code
-export const getToken = async (code, setUsername) => {
+export const getToken = async (code, setUserProfile, setUserPlaylists) => {
   // stored in the previous step
   const codeVerifier = localStorage.getItem("code_verifier");
 
@@ -64,12 +64,18 @@ export const getToken = async (code, setUsername) => {
 
   try {
     const response = await fetch(url, payload);
-    const data = await response.json();
     if (response.ok) {
-      localStorage.setItem("spotify_access_token", data.access_token);
-      localStorage.setItem("spotify_refresh_token", data.refresh_token);
-      const username = await fetchUsername();
-      setUsername(username);
+      const tokenResult = await response.json();
+      localStorage.setItem("spotify_access_token", tokenResult.access_token);
+      localStorage.setItem("spotify_refresh_token", tokenResult.refresh_token);
+      const profileResult = await fetchUserProfile(
+        tokenResult.access_token,
+        setUserProfile
+      );
+      const userPlaylists = await fetchUserPlaylists(
+        tokenResult.access_token,
+        setUserPlaylists
+      );
       return true;
     } else {
       console.log(`error response is ${response}`);
@@ -80,28 +86,53 @@ export const getToken = async (code, setUsername) => {
   }
 };
 
-export const fetchUsername = async () => {
-  const userProfileUrl = "https://api.spotify.com/v1/me";
-  const spotify_access_token = localStorage.getItem("spotify_access_token");
+export const fetchUserProfile = async (token, setUserProfile) => {
+  const userProfileEndpoint = "https://api.spotify.com/v1/me";
 
   const payload = {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${spotify_access_token}`,
+      Authorization: `Bearer ${token}`,
     },
   };
 
   try {
-    const response = await fetch(userProfileUrl, payload);
-    if(response.ok) {
-      const result = await response.json();
-      localStorage.setItem("username", result.display_name);
-      return result.display_name;
+    const response = await fetch(userProfileEndpoint, payload);
+    if (response.ok) {
+      const { display_name, id } = await response.json();
+      localStorage.setItem("username", display_name);
+      localStorage.setItem("userId", id);
+      setUserProfile((prevData) => ({
+        ...prevData,
+        display_name,
+        id,
+      }));
+      return true;
     }
   } catch (e) {
     console.log(`error fetching username ${e}`);
   }
 };
+
+export async function fetchUserPlaylists(token, setUserPlaylists) {
+  const userPlaylistEndpoint = "https://api.spotify.com/v1/me/playlists";
+
+  try {
+    const response = await fetch(userPlaylistEndpoint, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.ok) {
+      const result = await response.json();
+      setUserPlaylists(result.items);
+      return true;
+    }
+  } catch (e) {
+    console.log(`Error while fetching user playlists ${e}`);
+  }
+}
 
 export async function getRefreshToken() {
   // refresh token that has been previously stored
@@ -137,7 +168,7 @@ export async function getRefreshToken() {
 }
 
 export async function spotifySearch(searchText) {
-  const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+  const searchEndpoint = `https://api.spotify.com/v1/search?q=${encodeURIComponent(
     searchText
   )}&type=track`;
   // searching using access token
@@ -150,7 +181,7 @@ export async function spotifySearch(searchText) {
   };
 
   try {
-    const response = await fetch(searchUrl, payload);
+    const response = await fetch(searchEndpoint, payload);
     // refreshing token after expiry
     if (response.status === 401) {
       console.log("entering 401 refresh token");
@@ -159,7 +190,7 @@ export async function spotifySearch(searchText) {
         console.error("error while refreshing token");
       }
       // searching with new refreshed access token
-      const searchResponse = await fetch(searchUrl, {
+      const searchResponse = await fetch(searchEndpoint, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem(
@@ -167,12 +198,95 @@ export async function spotifySearch(searchText) {
           )}`,
         },
       });
-      const searchResult = await searchResponse.json();
-      return searchResult;
+      if (searchResponse.ok) {
+        const searchResult = await searchResponse.json();
+        return searchResult.tracks.items;
+      } else {
+        console.log(`error while searching`);
+      }
     }
     const result = await response.json();
-    return result;
+    return result.tracks.items;
   } catch (e) {
     console.log(`error while seraching ${e}`);
+  }
+}
+
+export async function saveUserPlaylist(userId, playlistName) {
+  const createPlaylistEndpoint = `https://api.spotify.com/v1/users/${userId}/playlists`;
+  const spotify_access_token = localStorage.getItem("spotify_access_token");
+  const payload = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${spotify_access_token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: playlistName,
+      description: "",
+      public: false,
+    }),
+  };
+
+  try {
+    const response = await fetch(createPlaylistEndpoint, payload);
+    if (response.ok) {
+      const result = await response.json();
+      return {
+        success: true,
+        playlistId: result.id,
+      };
+    }
+  } catch (e) {
+    console.log(`error while saving playlist ${e}`);
+  }
+}
+
+export async function addTracksToPlaylist(uriArray, playlistId) {
+  const addTracksEndpoint = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+  const spotify_access_token = localStorage.getItem("spotify_access_token");
+  const payload = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${spotify_access_token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      uris: uriArray,
+      position: 0,
+    }),
+  };
+
+  try {
+    const response = await fetch(addTracksEndpoint, payload);
+    if (response.ok) {
+      const result = response.json();
+      return true;
+    }
+  } catch (e) {
+    console.log(`Error while adding tracks to playlist ${e}`);
+  }
+}
+
+export async function fetchPlayListTracks(playlistId) {
+  
+  const playlistItemsEndpoint = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+  const spotify_access_token = localStorage.getItem('spotify_access_token');
+  const payload = {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${spotify_access_token}`,
+    }
+  }
+
+  try{
+    const response = await fetch(playlistItemsEndpoint, payload);
+    if(response.ok) {
+      const result = await response.json();
+      console.log(result.items);
+      return result.items;
+    }
+  }catch(e){
+    console.log(`Error while fetching tracks ${e}`);
   }
 }

@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 import HomeLayout from "./containers/HomeLayout.jsx";
-import LandingPage from "./containers/LandingPage.jsx";
+import LandingPageContainer from "./containers/LandingPageContainer.jsx";
 import Callback from "./Callback.jsx";
 
 createRoot(document.getElementById("root")).render(
@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <Routes>
         <Route element={<HomeLayout />} >
-        <Route index element={<LandingPage />} />
+        <Route index element={<LandingPageContainer />} />
         <Route path="app" element={<App />} />
         <Route path="callback" element={<Callback />} />
         </Route>

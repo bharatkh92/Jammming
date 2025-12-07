@@ -2,15 +2,18 @@ import Nav from "../components/Nav/Nav";
 
 export default function NavContainer({
   isLoggedIn,
+  userProfile,
   setIsLoggedIn,
-  username,
-  setUsername
+  setUserProfile,
+  setUserPlaylists
 }) {
   const handleLogout = (e) => {
     setIsLoggedIn(false);
-    setUsername(undefined)
+    setUserProfile({});
+    setUserPlaylists(undefined);
     localStorage.removeItem("spotify_access_token");
-    localStorage.removeItem("username");
+    localStorage.removeItem("spotify_refresh_token");
+    localStorage.removeItem("code_verifier");
   };
-  return <Nav isLoggedIn={isLoggedIn} handleLogout={handleLogout} username={username} />;
+  return <Nav isLoggedIn={isLoggedIn} handleLogout={handleLogout} userProfile={userProfile} />;
 }

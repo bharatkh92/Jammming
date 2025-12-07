@@ -11,7 +11,7 @@ function Tracklist({ data, setData, handleButtonClick, operation }) {
             name={trackObject.name}
             artists={trackObject.artists}
             uri={trackObject.uri}
-            image={trackObject.image}
+            image={trackObject.image || `https://picsum.photos/64/64`}
             key={index}
             handleButtonClick={handleButtonClick}
             operation={operation}
