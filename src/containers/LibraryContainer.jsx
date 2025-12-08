@@ -1,22 +1,18 @@
-import { fetchPlayListTracks } from "../authCodeWithPkce";
+import { fetchPlaylistTracks } from "../authCodeWithPkce";
 import Library from "../components/Library/Library";
 
 export default function LibraryContainer({
   userPlaylists,
   setNewPlaylistTracks,
-  setNewPlaylistName,
+  setNewPlaylistNameObject,
 }) {
   const onPlaylistClickHandler = async (playlistId, playlistName) => {
-    const result = await fetchPlayListTracks(playlistId);
-    const tracksArray = result.map(object => ({
-        id: object.track.id,
-        name: object.track.name,
-        artists: object.track.artists,
-        uri: object.track.uri,
-        image: object.track.album.images[2],
-    }) )
+    const result = await fetchPlaylistTracks(playlistId);
+    const tracksArray = result.map(object => object.track );
     setNewPlaylistTracks(tracksArray);
-    setNewPlaylistName(playlistName);
+    setNewPlaylistNameObject({name: playlistName, 
+      id: playlistId
+    });
   };
   return (
     <Library

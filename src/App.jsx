@@ -1,22 +1,33 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./App.module.css";
 import PlaylistContainer from "./containers/PlaylistContainer";
 import SearchBarContainer from "./containers/SearchBarContainer";
 import SearchResultsContainer from "./containers/SearchResultsContainer";
 import { useOutletContext } from "react-router";
-import { getUserAuth } from "./authCodeWithPkce";
+import { fetchUserPlaylists, fetchUserProfile, getUserAuth } from "./authCodeWithPkce";
 import LibraryContainer from "./containers/LibraryContainer";
 
 function App() {
   // states to store search results and newPlaylistTracks tracks
   const [response, setResponse] = useState();
   const [newPlaylistTracks, setNewPlaylistTracks] = useState([]);
-  const [newPlaylistName, setNewPlaylistName] = useState("Playlist");
+  const [newPlaylistNameObject, setNewPlaylistNameObject] = useState({name: 'playlist', id: ''});
+  const { isLoggedIn, userPlaylists, setUserPlaylists, userProfile, setUserProfile } = useOutletContext();
 
-  const { isLoggedIn, userPlaylists, userProfile } = useOutletContext();
+  const refreshUserData = async () => {
+    const userPlaylistResult = await fetchUserPlaylists(setUserPlaylists);
+    const userProfileResult = await fetchUserProfile(setUserProfile);
+  }
+  
+  const isGetUserAuthCalled = useRef(false);
+
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn && !isGetUserAuthCalled.current) {
+      isGetUserAuthCalled.current = true;
       getUserAuth();
+    } else {
+      refreshUserData();
+
     }
   }, []);
 
@@ -29,10 +40,12 @@ function App() {
         <PlaylistContainer
           newPlaylistTracks={newPlaylistTracks}
           setNewPlaylistTracks={setNewPlaylistTracks}
-          newPlaylistName={newPlaylistName}
-          setNewPlaylistName={setNewPlaylistName}
+          newPlaylistNameObject={newPlaylistNameObject}
+          setNewPlaylistNameObject={setNewPlaylistNameObject}
           setResponse={setResponse}
           userProfile={userProfile}
+          userPlaylists={userPlaylists}
+          refreshUserData={refreshUserData}
         />
         <SearchResultsContainer
           response={response}
@@ -45,7 +58,7 @@ function App() {
         <LibraryContainer
           userPlaylists={userPlaylists}
           setNewPlaylistTracks={setNewPlaylistTracks}
-          setNewPlaylistName={setNewPlaylistName}
+          setNewPlaylistNameObject={setNewPlaylistNameObject}
           
         />
       </div>

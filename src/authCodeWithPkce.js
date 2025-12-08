@@ -18,7 +18,7 @@ const base64encode = (input) => {
 
 // add your spotify app developper client ID and redirectURI here
 const clientId = "66658c358a2d4036983a5e036dad9f41";
-const redirectUri = "https://codecademyjammingbharatkh92.netlify.app/callback";
+const redirectUri = "http://127.0.0.1:5173/callback";
 
 // function to get auth code to later request access token for api calls
 export const getUserAuth = async () => {
@@ -26,7 +26,7 @@ export const getUserAuth = async () => {
   const hashed = await sha256(codeVerifier);
   const codeChallenge = base64encode(hashed);
   const scope =
-    "user-read-private user-read-email playlist-modify-private playlist-modify-public";
+    "user-read-private user-read-email playlist-modify-private playlist-modify-public playlist-read-private";
   const authEndpoint = new URL("https://accounts.spotify.com/authorize");
   // generated in the previous step
   window.localStorage.setItem("code_verifier", codeVerifier);
@@ -68,14 +68,8 @@ export const getToken = async (code, setUserProfile, setUserPlaylists) => {
       const tokenResult = await response.json();
       localStorage.setItem("spotify_access_token", tokenResult.access_token);
       localStorage.setItem("spotify_refresh_token", tokenResult.refresh_token);
-      const profileResult = await fetchUserProfile(
-        tokenResult.access_token,
-        setUserProfile
-      );
-      const userPlaylists = await fetchUserPlaylists(
-        tokenResult.access_token,
-        setUserPlaylists
-      );
+      const profileResult = await fetchUserProfile(setUserProfile);
+      const userPlaylistsResult = await fetchUserPlaylists(setUserPlaylists);
       return true;
     } else {
       console.log(`error response is ${response}`);
@@ -86,49 +80,54 @@ export const getToken = async (code, setUserProfile, setUserPlaylists) => {
   }
 };
 
-export const fetchUserProfile = async (token, setUserProfile) => {
-  const userProfileEndpoint = "https://api.spotify.com/v1/me";
-
-  const payload = {
-    method: "GET",
+export async function fetchWithAuth(endpoint, payload = {}) {
+  const spotify_access_token = localStorage.getItem("spotify_access_token");
+  const defaultPayload = {
+    ...payload,
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${spotify_access_token}`,
     },
   };
 
   try {
-    const response = await fetch(userProfileEndpoint, payload);
+    const response = await fetch(endpoint, defaultPayload);
     if (response.ok) {
-      const { display_name, id } = await response.json();
-      localStorage.setItem("username", display_name);
-      localStorage.setItem("userId", id);
-      setUserProfile((prevData) => ({
-        ...prevData,
-        display_name,
-        id,
-      }));
-      return true;
+      const result = await response.json();
+      return result;
     }
   } catch (e) {
-    console.log(`error fetching username ${e}`);
+    console.log(`Error while fetchWithAuth ${e}`);
+  }
+}
+
+export async function fetchUserProfile (setUserProfile) {
+  const userProfileEndpoint = "https://api.spotify.com/v1/me";
+  const payload = {
+    method: "GET",
+  };
+
+  try {
+    const result = await fetchWithAuth(userProfileEndpoint, payload);
+    setUserProfile((prevData) => ({
+      ...prevData,
+      username: result.display_name,
+      userId: result.id,
+    }));
+  } catch (e) {
+    console.log(`error while fetching usser profile ${e}`);
   }
 };
 
-export async function fetchUserPlaylists(token, setUserPlaylists) {
+export async function fetchUserPlaylists(setUserPlaylists) {
   const userPlaylistEndpoint = "https://api.spotify.com/v1/me/playlists";
 
+  const payload = {
+    method: "GET",
+  };
   try {
-    const response = await fetch(userPlaylistEndpoint, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (response.ok) {
-      const result = await response.json();
-      setUserPlaylists(result.items);
-      return true;
-    }
+    const result = await fetchWithAuth(userPlaylistEndpoint, payload);
+    setUserPlaylists(result.items);
+    return true;
   } catch (e) {
     console.log(`Error while fetching user playlists ${e}`);
   }
@@ -214,11 +213,9 @@ export async function spotifySearch(searchText) {
 
 export async function saveUserPlaylist(userId, playlistName) {
   const createPlaylistEndpoint = `https://api.spotify.com/v1/users/${userId}/playlists`;
-  const spotify_access_token = localStorage.getItem("spotify_access_token");
   const payload = {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${spotify_access_token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -229,14 +226,11 @@ export async function saveUserPlaylist(userId, playlistName) {
   };
 
   try {
-    const response = await fetch(createPlaylistEndpoint, payload);
-    if (response.ok) {
-      const result = await response.json();
+    const result = await fetchWithAuth(createPlaylistEndpoint, payload);
       return {
         success: true,
         playlistId: result.id,
       };
-    }
   } catch (e) {
     console.log(`error while saving playlist ${e}`);
   }
@@ -244,11 +238,9 @@ export async function saveUserPlaylist(userId, playlistName) {
 
 export async function addTracksToPlaylist(uriArray, playlistId) {
   const addTracksEndpoint = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
-  const spotify_access_token = localStorage.getItem("spotify_access_token");
   const payload = {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${spotify_access_token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -258,9 +250,8 @@ export async function addTracksToPlaylist(uriArray, playlistId) {
   };
 
   try {
-    const response = await fetch(addTracksEndpoint, payload);
-    if (response.ok) {
-      const result = response.json();
+    const result = await fetchWithAuth(addTracksEndpoint, payload);
+    if (result) {
       return true;
     }
   } catch (e) {
@@ -268,25 +259,43 @@ export async function addTracksToPlaylist(uriArray, playlistId) {
   }
 }
 
-export async function fetchPlayListTracks(playlistId) {
-  
+export async function fetchPlaylistTracks(playlistId) {
   const playlistItemsEndpoint = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
-  const spotify_access_token = localStorage.getItem('spotify_access_token');
+  const spotify_access_token = localStorage.getItem("spotify_access_token");
   const payload = {
-    method: 'GET',
+    method: "GET",
     headers: {
       Authorization: `Bearer ${spotify_access_token}`,
-    }
-  }
+    },
+  };
 
-  try{
+  try {
     const response = await fetch(playlistItemsEndpoint, payload);
-    if(response.ok) {
+    if (response.ok) {
       const result = await response.json();
-      console.log(result.items);
       return result.items;
     }
-  }catch(e){
+  } catch (e) {
     console.log(`Error while fetching tracks ${e}`);
   }
 }
+
+export async function doesPlaylistExist(playlistId) {
+  // to check Playlist existence we need to check if user follows a Playlist.
+  const playlistFollowersEndpoint = `https://api.spotify.com/v1/playlists/${playlistId}/followers/contains`;
+  const payload = {
+    method: "GET",
+  };
+
+  try {
+    const result = await fetchWithAuth(playlistFollowersEndpoint, payload);
+    if (result) {
+      console.log(result);
+      return result[0];
+    }
+  } catch (e) {
+    console.log(`Error while checking playlist exist ${e}`);
+  }
+}
+
+export async function removeUserPlaylist(playlistId) {}

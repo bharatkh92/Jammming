@@ -12,8 +12,8 @@ library.add(fas);
 function Playlist({
   inputToggle,
   setInputToggle,
-  newPlaylistName,
-  setNewPlaylistName,
+  newPlaylistNameObject,
+  setNewPlaylistNameObject,
   handlePlaylistName,
   newPlaylistTracks,
   setNewPlaylistTracks,
@@ -27,8 +27,13 @@ function Playlist({
       <form className={styles.playlistNameEdit} onSubmit={handlePlaylistName}>
         <input
           type="text"
-          value={newPlaylistName}
-          onChange={(e) => setNewPlaylistName(e.target.value)}
+          value={newPlaylistNameObject.name}
+          onChange={(e) =>
+            setNewPlaylistNameObject((prevObject) => ({
+              ...prevObject,
+              name: e.target.value,
+            }))
+          }
           autoFocus
         />
         <FontAwesomeIcon
@@ -41,7 +46,9 @@ function Playlist({
   } else {
     content = (
       <div className={styles.playlistNameDisplay}>
-        <span onClick={() => setInputToggle(true)}>{newPlaylistName}</span>
+        <span onClick={() => setInputToggle(true)}>
+          {newPlaylistNameObject.name}
+        </span>
         <FontAwesomeIcon
           className={styles.fontAwsomeIcon}
           icon="fa-solid fa-pen"

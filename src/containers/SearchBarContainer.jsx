@@ -9,15 +9,7 @@ function SearchBarContainer({ setResponse }) {
     event.preventDefault();
     // fetch search results from spotify
     const response = await spotifySearch(searchText);
-    // adding results to the searchResults container
-    const tracksArray = response.map((arrayElement) => ({
-      id: arrayElement.id,
-      name: arrayElement.name,
-      artists: arrayElement.artists,
-      uri: arrayElement.uri,
-      image: arrayElement.album.images[2],
-    }));
-    setResponse(tracksArray);
+    setResponse(response);
     setSearchText("");
   }
 

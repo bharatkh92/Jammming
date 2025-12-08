@@ -5,10 +5,12 @@ import { addTracksToPlaylist, saveUserPlaylist } from "../authCodeWithPkce";
 function PlaylistContainer({
   newPlaylistTracks,
   userProfile,
+  userPlaylists,
   setNewPlaylistTracks,
   setResponse,
-  newPlaylistName,
-  setNewPlaylistName,
+  newPlaylistNameObject,
+  setNewPlaylistNameObject,
+  refreshUserData
 }) {
   const [inputToggle, setInputToggle] = useState(false);
 
@@ -23,13 +25,22 @@ function PlaylistContainer({
   }
 
   async function handleSaveToSpotify() {
+    // checking if the playlist already exists in user playlist
+    if(userPlaylists.find(arrayElement => arrayElement.id === newPlaylistNameObject.id )){
+      console.log(`the playlist exists already`);
+      // deleting old playlist
+      
+    }
     const { success, playlistId } = await saveUserPlaylist(
       userProfile.userId,
-      newPlaylistName
+      newPlaylistNameObject.name
     );
     if (success) {
       let trackUris = newPlaylistTracks.map((track) => track.uri);
       const result = await addTracksToPlaylist(trackUris, playlistId);
+      if(result) {
+        refreshUserData();
+      }
     }
   }
 
@@ -38,8 +49,8 @@ function PlaylistContainer({
       <Playlist
         inputToggle={inputToggle}
         setInputToggle={setInputToggle}
-        newPlaylistName={newPlaylistName}
-        setNewPlaylistName={setNewPlaylistName}
+        newPlaylistNameObject={newPlaylistNameObject}
+        setNewPlaylistNameObject={setNewPlaylistNameObject}
         handlePlaylistName={handlePlaylistName}
         newPlaylistTracks={newPlaylistTracks}
         setNewPlaylistTracks={setNewPlaylistTracks}
