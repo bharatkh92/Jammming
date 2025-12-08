@@ -18,7 +18,7 @@ const base64encode = (input) => {
 
 // add your spotify app developper client ID and redirectURI here
 const clientId = "66658c358a2d4036983a5e036dad9f41";
-const redirectUri = "http://127.0.0.1:5173/callback";
+const redirectUri = "https://codecademyjammingbharatkh92.netlify.app/callback";
 
 // function to get auth code to later request access token for api calls
 export const getUserAuth = async () => {
@@ -119,7 +119,7 @@ export async function fetchUserProfile (setUserProfile) {
 };
 
 export async function fetchUserPlaylists(setUserPlaylists) {
-  const userPlaylistEndpoint = "https://api.spotify.com/v1/me/playlists";
+  const userPlaylistEndpoint = "https://api.spotify.com/v1/me/playlists?limit=50";
 
   const payload = {
     method: "GET",
@@ -211,7 +211,7 @@ export async function spotifySearch(searchText) {
   }
 }
 
-export async function saveUserPlaylist(userId, playlistName) {
+export async function createUserPlaylist(userId, playlistName) {
   const createPlaylistEndpoint = `https://api.spotify.com/v1/users/${userId}/playlists`;
   const payload = {
     method: "POST",
@@ -227,10 +227,7 @@ export async function saveUserPlaylist(userId, playlistName) {
 
   try {
     const result = await fetchWithAuth(createPlaylistEndpoint, payload);
-      return {
-        success: true,
-        playlistId: result.id,
-      };
+      return result.id;
   } catch (e) {
     console.log(`error while saving playlist ${e}`);
   }
@@ -252,10 +249,18 @@ export async function addTracksToPlaylist(uriArray, playlistId) {
   try {
     const result = await fetchWithAuth(addTracksEndpoint, payload);
     if (result) {
-      return true;
+      return result.snapshot_id;
     }
   } catch (e) {
     console.log(`Error while adding tracks to playlist ${e}`);
+  }
+}
+
+export async function saveUserPlaylist(userId, playlistName, trackUris) {
+  const newPlaylistId = await createUserPlaylist(userId, playlistName);
+  if(newPlaylistId) {
+    const addTracksResult = await addTracksToPlaylist(trackUris, newPlaylistId);
+    return addTracksResult ? true : false;
   }
 }
 
@@ -298,4 +303,23 @@ export async function doesPlaylistExist(playlistId) {
   }
 }
 
-export async function removeUserPlaylist(playlistId) {}
+export async function removeUserPlaylist(playlistId) {
+  const spotify_access_token = localStorage.getItem('spotify_access_token');
+  const removePlaylistEndpoint = `https://api.spotify.com/v1/playlists/${playlistId}/followers`;
+  const payload = {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${spotify_access_token}`,
+    }
+  }
+
+  try{
+    const response = await fetch(removePlaylistEndpoint, payload);
+    if(response.ok) {
+      return true;
+    }
+  }catch(e) {
+    console.log(`Error while deleting the playlist ${e}`);
+  }
+
+}

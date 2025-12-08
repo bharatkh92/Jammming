@@ -11,7 +11,7 @@ function App() {
   // states to store search results and newPlaylistTracks tracks
   const [response, setResponse] = useState();
   const [newPlaylistTracks, setNewPlaylistTracks] = useState([]);
-  const [newPlaylistNameObject, setNewPlaylistNameObject] = useState({name: 'playlist', id: ''});
+  const [newPlaylistNameObject, setNewPlaylistNameObject] = useState({name: 'Playlist', id: ''});
   const { isLoggedIn, userPlaylists, setUserPlaylists, userProfile, setUserProfile } = useOutletContext();
 
   const refreshUserData = async () => {

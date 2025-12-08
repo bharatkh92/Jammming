@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import Playlist from "../components/Playlist/Playlist";
-import { addTracksToPlaylist, saveUserPlaylist } from "../authCodeWithPkce";
+import {
+  addTracksToPlaylist,
+  removeUserPlaylist,
+  saveUserPlaylist,
+} from "../authCodeWithPkce";
 
 function PlaylistContainer({
   newPlaylistTracks,
@@ -10,7 +14,7 @@ function PlaylistContainer({
   setResponse,
   newPlaylistNameObject,
   setNewPlaylistNameObject,
-  refreshUserData
+  refreshUserData,
 }) {
   const [inputToggle, setInputToggle] = useState(false);
 
@@ -21,26 +25,31 @@ function PlaylistContainer({
 
   function handleRemoveTrack(id) {
     // filtering out and removing the songs from the newPlaylistTracks
-    setNewPlaylistTracks((prev) => prev.filter((trackObject) => trackObject.id != id));
+    setNewPlaylistTracks((prev) =>
+      prev.filter((trackObject) => trackObject.id != id)
+    );
   }
 
   async function handleSaveToSpotify() {
+    let trackUris = newPlaylistTracks.map((track) => track.uri);
     // checking if the playlist already exists in user playlist
-    if(userPlaylists.find(arrayElement => arrayElement.id === newPlaylistNameObject.id )){
-      console.log(`the playlist exists already`);
+    if (
+      userPlaylists.find(
+        (arrayElement) => arrayElement.id === newPlaylistNameObject.id
+      )
+    ) {
       // deleting old playlist
-      
+      const result = await removeUserPlaylist(newPlaylistNameObject.id);
     }
-    const { success, playlistId } = await saveUserPlaylist(
+    const newPlaylistSaved = await saveUserPlaylist(
       userProfile.userId,
-      newPlaylistNameObject.name
+      newPlaylistNameObject.name,
+      trackUris
     );
-    if (success) {
-      let trackUris = newPlaylistTracks.map((track) => track.uri);
-      const result = await addTracksToPlaylist(trackUris, playlistId);
-      if(result) {
-        refreshUserData();
-      }
+    if (newPlaylistSaved) {
+      refreshUserData();
+      setNewPlaylistNameObject(prevObject => ({ ...prevObject, name: 'Playlist', id: ''}));
+      setNewPlaylistTracks([]);
     }
   }
 
