@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./Track.module.css";
 
 function Track({
@@ -10,7 +11,7 @@ function Track({
   buttonOperator,
 }) {
   return (
-    <div className={styles.track} onClick={() => handleButtonClick(id)}>
+    <div className={styles.track}>
       <img
         className={styles.imageContainer}
         src={image.url}
@@ -23,7 +24,8 @@ function Track({
         </p>
         <p>{artists.map((artist) => artist.name).join(", ")}</p>
       </div>
-      <button className={styles.buttonContainer}>{buttonOperator}</button>
+      <FontAwesomeIcon icon="fa-solid fa-thumbs-up" />
+      <button className={styles.buttonContainer} onClick={() => handleButtonClick(id)} >{buttonOperator}</button>
     </div>
   );
 }

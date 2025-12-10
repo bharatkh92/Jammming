@@ -18,7 +18,8 @@ const base64encode = (input) => {
 
 // add your spotify app developper client ID and redirectURI here
 const clientId = "66658c358a2d4036983a5e036dad9f41";
-const redirectUri = "https://codecademyjammingbharatkh92.netlify.app/callback";
+const redirectUri = "http://127.0.0.1:5173/callback";
+// const redirectUri = "https://codecademyjammingbharatkh92.netlify.app/callback";
 
 // function to get auth code to later request access token for api calls
 export const getUserAuth = async () => {
@@ -80,11 +81,12 @@ export const getToken = async (code, setUserProfile, setUserPlaylists) => {
   }
 };
 
-export async function fetchWithAuth(endpoint, payload = {}) {
+export async function fetchWithAuth(endpoint, payload = {}, isRefreshCalled = false) {
   const spotify_access_token = localStorage.getItem("spotify_access_token");
   const defaultPayload = {
     ...payload,
     headers: {
+      ...payload.headers,
       Authorization: `Bearer ${spotify_access_token}`,
     },
   };
@@ -92,8 +94,14 @@ export async function fetchWithAuth(endpoint, payload = {}) {
   try {
     const response = await fetch(endpoint, defaultPayload);
     if (response.ok) {
-      const result = await response.json();
-      return result;
+      const result = await response.text();
+      return result ? JSON.parse(result) : true ;
+    } else if (response.status=== 401 && !isRefreshCalled) {
+      isRefreshCalled = true;
+      const refreshTokenResult = await getRefreshToken();
+      if(refreshTokenResult){
+        return fetchWithAuth(endpoint, payload, isRefreshCalled);
+      }
     }
   } catch (e) {
     console.log(`Error while fetchWithAuth ${e}`);
@@ -157,9 +165,9 @@ export async function getRefreshToken() {
       if (result.refresh_token) {
         localStorage.setItem("spotify_refresh_token", result.refresh_token);
       }
-      return true;
+      return result.access_token;
     } else {
-      return false;
+      return response.status;
     }
   } catch (e) {
     console.error(e);
@@ -170,42 +178,15 @@ export async function spotifySearch(searchText) {
   const searchEndpoint = `https://api.spotify.com/v1/search?q=${encodeURIComponent(
     searchText
   )}&type=track`;
-  // searching using access token
-  const spotify_access_token = localStorage.getItem("spotify_access_token");
-  const payload = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${spotify_access_token}`,
-    },
-  };
 
   try {
-    const response = await fetch(searchEndpoint, payload);
+    const result = await fetchWithAuth(searchEndpoint);
     // refreshing token after expiry
-    if (response.status === 401) {
-      console.log("entering 401 refresh token");
-      const refreshTokenResponse = await getRefreshToken();
-      if (!refreshTokenResponse) {
-        console.error("error while refreshing token");
-      }
-      // searching with new refreshed access token
-      const searchResponse = await fetch(searchEndpoint, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(
-            "spotify_access_token"
-          )}`,
-        },
-      });
-      if (searchResponse.ok) {
-        const searchResult = await searchResponse.json();
-        return searchResult.tracks.items;
-      } else {
-        console.log(`error while searching`);
-      }
+    if (result) {
+      return result.tracks.items;
+    } else {
+      console.log(`Error while searching ${result}`);
     }
-    const result = await response.json();
-    return result.tracks.items;
   } catch (e) {
     console.log(`error while seraching ${e}`);
   }
@@ -275,9 +256,8 @@ export async function fetchPlaylistTracks(playlistId) {
   };
 
   try {
-    const response = await fetch(playlistItemsEndpoint, payload);
-    if (response.ok) {
-      const result = await response.json();
+    const result = await fetchWithAuth(playlistItemsEndpoint);
+    if (result) {
       return result.items;
     }
   } catch (e) {
@@ -304,18 +284,14 @@ export async function doesPlaylistExist(playlistId) {
 }
 
 export async function removeUserPlaylist(playlistId) {
-  const spotify_access_token = localStorage.getItem('spotify_access_token');
   const removePlaylistEndpoint = `https://api.spotify.com/v1/playlists/${playlistId}/followers`;
   const payload = {
     method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${spotify_access_token}`,
-    }
   }
 
   try{
-    const response = await fetch(removePlaylistEndpoint, payload);
-    if(response.ok) {
+    const result = await fetchWithAuth(removePlaylistEndpoint, payload);
+    if(result) {
       return true;
     }
   }catch(e) {
