@@ -5,9 +5,9 @@
     align-items: center;
     width: 98%;
     background-color: #222831;
-    margin: 0 auto;
+    margin: 0 auto 1% auto;
     padding: 5% 0 3% 0;
-    border-radius: 3% 3% 3% 3% / 1% 1% 1% 1%;
+    border-radius: 10px;
 
 }
 

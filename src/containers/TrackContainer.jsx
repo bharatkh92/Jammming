@@ -7,12 +7,12 @@ function TrackContainer({
   uri,
   image,
   handleButtonClick,
-  operation,
+  buttonDisplayChar,
+  handleLikeIconOnClick
 }) {
   return (
     <>
       {/* adding addition and deleting buttons */}
-      {operation === "addTrack" ? (
         <Track
           id={id}
           name={name}
@@ -20,19 +20,9 @@ function TrackContainer({
           uri={uri}
           image={image}
           handleButtonClick={handleButtonClick}
-          buttonOperator={"+"}
+          buttonDisplayChar={buttonDisplayChar}
+          handleLikeIconOnClick={handleLikeIconOnClick}
         />
-      ) : (
-        <Track
-          id={id}
-          name={name}
-          artists={artists}
-          uri={uri}
-          image={image}
-          handleButtonClick={handleButtonClick}
-          buttonOperator={"-"}
-        />
-      )}
     </>
   );
 }

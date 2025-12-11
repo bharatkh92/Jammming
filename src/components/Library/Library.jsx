@@ -1,5 +1,5 @@
 import styles from "./Library.module.css";
-export default function Library({ userPlaylists, onPlaylistClickHandler }) {
+function Library({ userPlaylists, onPlaylistClickHandler }) {
   return (
     <div className={styles.library}>
       <p className={styles.libraryTitle}>Your PlayLists</p>
@@ -18,3 +18,5 @@ export default function Library({ userPlaylists, onPlaylistClickHandler }) {
     </div>
   );
 }
+
+export default Library;

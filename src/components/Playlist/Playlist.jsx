@@ -16,9 +16,9 @@ function Playlist({
   setNewPlaylistNameObject,
   handlePlaylistName,
   newPlaylistTracks,
-  setNewPlaylistTracks,
   handleRemoveTrack,
   handleSaveToSpotify,
+  handleAddLikedSong
 }) {
   let content;
 
@@ -65,8 +65,9 @@ function Playlist({
         <>
           <TracklistContainer
             data={newPlaylistTracks}
-            setData={setNewPlaylistTracks}
             handleButtonClick={handleRemoveTrack}
+            buttonDisplayChar={"-"}
+            handleLikeIconOnClick={handleAddLikedSong}
           />
           <button className={styles.button} onClick={handleSaveToSpotify}>
             Save To Spotify

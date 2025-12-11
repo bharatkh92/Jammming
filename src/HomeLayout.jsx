@@ -11,6 +11,7 @@ export default function HomeLayout() {
     userId: undefined,
   });
   const [userPlaylists, setUserPlaylists] = useState([]);
+  const [likedSongs, setLikedSongs] = useState([]);
 
   return (
     <div>
@@ -29,6 +30,8 @@ export default function HomeLayout() {
           setUserProfile,
           userPlaylists,
           setUserPlaylists,
+          likedSongs,
+          setLikedSongs
         }}
       />
     </div>

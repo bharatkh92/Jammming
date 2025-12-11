@@ -1,7 +1,7 @@
 import { fetchPlaylistTracks } from "../authCodeWithPkce";
 import Library from "../components/Library/Library";
 
-export default function LibraryContainer({
+function LibraryContainer({
   userPlaylists,
   setNewPlaylistTracks,
   setNewPlaylistNameObject,
@@ -21,3 +21,5 @@ export default function LibraryContainer({
     />
   );
 }
+
+export default LibraryContainer;

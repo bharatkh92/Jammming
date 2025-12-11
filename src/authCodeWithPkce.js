@@ -27,7 +27,7 @@ export const getUserAuth = async () => {
   const hashed = await sha256(codeVerifier);
   const codeChallenge = base64encode(hashed);
   const scope =
-    "user-read-private user-read-email playlist-modify-private playlist-modify-public playlist-read-private";
+    "user-read-private user-read-email playlist-modify-private playlist-modify-public playlist-read-private user-library-read user-library-modify";
   const authEndpoint = new URL("https://accounts.spotify.com/authorize");
   // generated in the previous step
   window.localStorage.setItem("code_verifier", codeVerifier);
@@ -81,7 +81,11 @@ export const getToken = async (code, setUserProfile, setUserPlaylists) => {
   }
 };
 
-export async function fetchWithAuth(endpoint, payload = {}, isRefreshCalled = false) {
+export async function fetchWithAuth(
+  endpoint,
+  payload = {},
+  isRefreshCalled = false
+) {
   const spotify_access_token = localStorage.getItem("spotify_access_token");
   const defaultPayload = {
     ...payload,
@@ -95,11 +99,11 @@ export async function fetchWithAuth(endpoint, payload = {}, isRefreshCalled = fa
     const response = await fetch(endpoint, defaultPayload);
     if (response.ok) {
       const result = await response.text();
-      return result ? JSON.parse(result) : true ;
-    } else if (response.status=== 401 && !isRefreshCalled) {
+      return result ? JSON.parse(result) : true;
+    } else if (response.status === 401 && !isRefreshCalled) {
       isRefreshCalled = true;
       const refreshTokenResult = await getRefreshToken();
-      if(refreshTokenResult){
+      if (refreshTokenResult) {
         return fetchWithAuth(endpoint, payload, isRefreshCalled);
       }
     }
@@ -108,7 +112,7 @@ export async function fetchWithAuth(endpoint, payload = {}, isRefreshCalled = fa
   }
 }
 
-export async function fetchUserProfile (setUserProfile) {
+export async function fetchUserProfile(setUserProfile) {
   const userProfileEndpoint = "https://api.spotify.com/v1/me";
   const payload = {
     method: "GET",
@@ -124,10 +128,11 @@ export async function fetchUserProfile (setUserProfile) {
   } catch (e) {
     console.log(`error while fetching usser profile ${e}`);
   }
-};
+}
 
 export async function fetchUserPlaylists(setUserPlaylists) {
-  const userPlaylistEndpoint = "https://api.spotify.com/v1/me/playlists?limit=50";
+  const userPlaylistEndpoint =
+    "https://api.spotify.com/v1/me/playlists?limit=50";
 
   const payload = {
     method: "GET",
@@ -208,7 +213,7 @@ export async function createUserPlaylist(userId, playlistName) {
 
   try {
     const result = await fetchWithAuth(createPlaylistEndpoint, payload);
-      return result.id;
+    return result.id;
   } catch (e) {
     console.log(`error while saving playlist ${e}`);
   }
@@ -239,7 +244,7 @@ export async function addTracksToPlaylist(uriArray, playlistId) {
 
 export async function saveUserPlaylist(userId, playlistName, trackUris) {
   const newPlaylistId = await createUserPlaylist(userId, playlistName);
-  if(newPlaylistId) {
+  if (newPlaylistId) {
     const addTracksResult = await addTracksToPlaylist(trackUris, newPlaylistId);
     return addTracksResult ? true : false;
   }
@@ -247,13 +252,6 @@ export async function saveUserPlaylist(userId, playlistName, trackUris) {
 
 export async function fetchPlaylistTracks(playlistId) {
   const playlistItemsEndpoint = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
-  const spotify_access_token = localStorage.getItem("spotify_access_token");
-  const payload = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${spotify_access_token}`,
-    },
-  };
 
   try {
     const result = await fetchWithAuth(playlistItemsEndpoint);
@@ -286,16 +284,85 @@ export async function doesPlaylistExist(playlistId) {
 export async function removeUserPlaylist(playlistId) {
   const removePlaylistEndpoint = `https://api.spotify.com/v1/playlists/${playlistId}/followers`;
   const payload = {
-    method: 'DELETE',
-  }
+    method: "DELETE",
+  };
 
-  try{
+  try {
     const result = await fetchWithAuth(removePlaylistEndpoint, payload);
-    if(result) {
+    if (result) {
       return true;
     }
-  }catch(e) {
+  } catch (e) {
     console.log(`Error while deleting the playlist ${e}`);
   }
+}
 
+export async function getUserLikedSongs(setLikedSongs) {
+  const likedSongsEndpoint = `https://api.spotify.com/v1/me/tracks?limit=50`;
+  const payload = {
+    method: "GET",
+  };
+  try {
+    const result = await fetchWithAuth(likedSongsEndpoint, payload);
+    if (result) {
+      const resultTracks = result.items.map(Object => Object.track)
+      setLikedSongs(resultTracks);
+    }
+  } catch (e) {
+    console.log(`Error while fetching liked songs ${e}`);
+  }
+}
+
+export async function removeLikedSongs(id) {
+  const removeLikedSongEndpoint = `https://api.spotify.com/v1/me/tracks?ids=${id}`;
+  const payload = {
+    method: "DELETE",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: {
+      ids: [id],
+    },
+  }
+
+  try {
+    const result = await fetchWithAuth(removeLikedSongEndpoint, payload);
+    return result;
+  }catch(e) {
+    console.log(`Error while removing liked song ${e}`);
+  }
+}
+
+export async function addToLikedSongs(id) {
+  const addToLikedSongsEndpoint = `https://api.spotify.com/v1/me/tracks?ids=${id}`;
+  const payload = {
+    method: "PUT",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: {
+      ids: [id],
+    },
+  }
+
+  try {
+    const result = await fetchWithAuth(addToLikedSongsEndpoint, payload);
+    return result;
+  }catch(e) {
+    console.log(`Error while adding liked song ${e}`);
+  }
+}
+
+export async function checkLikedSongs(id) {
+  const checkLikedSongsEndpoint = `https://api.spotify.com/v1/me/tracks/contains?ids=${id}`;
+  const payload = {
+    method: "GET",
+  }
+
+  try {
+    const result = await fetchWithAuth(checkLikedSongsEndpoint, payload);
+    return result;
+  }catch(e) {
+    console.log(`Error while checking if liked song exists ${e}`);
+  }
 }

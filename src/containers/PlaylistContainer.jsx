@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Playlist from "../components/Playlist/Playlist";
 import {
-  addTracksToPlaylist,
+  addToLikedSongs,
+  checkLikedSongs,
+  getUserLikedSongs,
   removeUserPlaylist,
   saveUserPlaylist,
 } from "../authCodeWithPkce";
@@ -11,10 +13,10 @@ function PlaylistContainer({
   userProfile,
   userPlaylists,
   setNewPlaylistTracks,
-  setResponse,
   newPlaylistNameObject,
   setNewPlaylistNameObject,
   refreshUserData,
+  setLikedSongs
 }) {
   const [inputToggle, setInputToggle] = useState(false);
 
@@ -53,6 +55,18 @@ function PlaylistContainer({
     }
   }
 
+  async function handleAddLikedSong(id) {
+    const alreadyExists = await checkLikedSongs(id);
+    if(!alreadyExists[0]){
+      const addToLikedResult = await addToLikedSongs(id);
+      console.log('song added');
+      const refreshResult = getUserLikedSongs(setLikedSongs);
+    } else {
+      console.log('song already exists');
+    }
+
+  }
+
   return (
     <>
       <Playlist
@@ -62,9 +76,9 @@ function PlaylistContainer({
         setNewPlaylistNameObject={setNewPlaylistNameObject}
         handlePlaylistName={handlePlaylistName}
         newPlaylistTracks={newPlaylistTracks}
-        setNewPlaylistTracks={setNewPlaylistTracks}
         handleRemoveTrack={handleRemoveTrack}
         handleSaveToSpotify={handleSaveToSpotify}
+        handleAddLikedSong={handleAddLikedSong}
       />
     </>
   );

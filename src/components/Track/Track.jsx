@@ -8,7 +8,8 @@ function Track({
   uri,
   image,
   handleButtonClick,
-  buttonOperator,
+  buttonDisplayChar,
+  handleLikeIconOnClick,
 }) {
   return (
     <div className={styles.track}>
@@ -24,8 +25,21 @@ function Track({
         </p>
         <p>{artists.map((artist) => artist.name).join(", ")}</p>
       </div>
-      <FontAwesomeIcon icon="fa-solid fa-thumbs-up" />
-      <button className={styles.buttonContainer} onClick={() => handleButtonClick(id)} >{buttonOperator}</button>
+      <FontAwesomeIcon
+        className={styles.icon}
+        onClick={() => handleLikeIconOnClick(id)}
+        icon="fa-solid fa-thumbs-up"
+      />
+      {handleButtonClick && buttonDisplayChar ? (
+        <div
+          className={styles.buttonContainer}
+          onClick={() => handleButtonClick(id)}
+        >
+          {buttonDisplayChar}
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

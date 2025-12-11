@@ -1,26 +1,37 @@
+import { addToLikedSongs, checkLikedSongs, getUserLikedSongs } from "../authCodeWithPkce";
 import SearchResults from "../components/SearchResults/SearchResults";
 
 function SearchResultsContainer({
   response,
-  setResponse,
   newPlaylistTracks,
   setNewPlaylistTracks,
+  setLikedSongs
 }) {
-  // using same Tracklist component for both searchresults and playlist operation is add or remove track
-  const operation = "addTrack";
   function handleAddTrack(id) {
     if (!newPlaylistTracks.find((track) => track.id === id)) {
       let trackObject = response.find((track) => track.id === id);
       setNewPlaylistTracks((prev) => [...prev, trackObject]);
     }
   }
+
+  async function handleAddLikedSong(id) {
+    const alreadyExists = await checkLikedSongs(id);
+    if (!alreadyExists[0]) {
+      const addToLikedResult = await addToLikedSongs(id);
+      console.log('song added');
+      const refreshResult = getUserLikedSongs(setLikedSongs);
+    } else {
+      console.log("song already exists");
+    }
+  }
+
   return (
     <>
       <SearchResults
         response={response}
-        setResponse={setResponse}
         handleAddTrack={handleAddTrack}
-        operation={operation}
+        buttonDisplayChar={"+"}
+        handleAddLikedSong={handleAddLikedSong}
       />
     </>
   );
