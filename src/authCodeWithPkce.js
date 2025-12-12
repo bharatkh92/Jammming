@@ -18,8 +18,8 @@ const base64encode = (input) => {
 
 // add your spotify app developper client ID and redirectURI here
 const clientId = "66658c358a2d4036983a5e036dad9f41";
-const redirectUri = "http://127.0.0.1:5173/callback";
-// const redirectUri = "https://codecademyjammingbharatkh92.netlify.app/callback";
+// const redirectUri = "http://127.0.0.1:5173/callback";
+const redirectUri = "https://jammmingbharatkh92.netlify.app/callback";
 
 // function to get auth code to later request access token for api calls
 export const getUserAuth = async () => {
