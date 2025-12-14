@@ -40,4 +40,12 @@
     .library {
         width: auto;
     }
+
+    .libraryTitle {
+        font-size: 1rem;
+    }
+
+    .playlist {
+        font-size: 0.8rem;
+    }
 }
